@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.1.0 (2026-10-22). Built and linted; smoke-tested on the sample dump with no connectors; independent review history in [REVIEW.md](REVIEW.md). Not yet run on a live inbox. Not published.
+> Status: v0.1.0 (2026-10-22). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). Not yet run on a live inbox or calendar. Not published.
 
 ## What you hand it
 
