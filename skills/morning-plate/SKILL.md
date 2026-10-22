@@ -5,7 +5,7 @@ description: The proactive daily routine - the version of plate-triage built to 
 
 # Morning plate
 
-This is `plate-triage` with the human absent. Read `../../RULES.md` first. Everything in it holds, plus the rules below.
+This is `plate-triage` with the human absent. Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first. Everything in it holds, plus the rules below.
 
 ## Unattended rules
 
@@ -44,7 +44,7 @@ Missing: <the one gap most likely to cost you this week>.
 Full Plate: plate/plate.md
 ```
 
-Then write the full Plate to `plate/plate.md`, copy yesterday's to `history/`, run the lint, and have the `plate-reviewer` agent check it. If the reviewer returns NEEDS REVISION, fix and re-run once; if it fails twice, send the brief anyway with "UNREVIEWED: <reviewer's top defect>" as its last line. A late brief is worse than a labeled one.
+Then write the full Plate to `plate/plate.md`, move yesterday's to `history/`, run the lint, and have the `plate-reviewer` agent check it. If the reviewer returns NEEDS REVISION, fix and re-run once; if it fails twice, deliver the brief anyway with "UNREVIEWED: <reviewer's top defect>" as its last line. If the runtime has no shell or no plugin agents (a proactive cloud runtime may have neither), deliver the brief with "UNLINTED, UNREVIEWED: no shell in this runtime" as its last line and apply the RULES §3 checklist by hand. A late brief is worse than a labeled one.
 
 ## Setting up the routine
 

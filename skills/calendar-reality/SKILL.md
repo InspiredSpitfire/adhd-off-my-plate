@@ -5,7 +5,7 @@ description: Turns a calendar into the number of real working hours the human ac
 
 # Calendar reality
 
-Read `../../RULES.md` first (especially §6, capacity is arithmetic), then `plate/config.md` for waking hours, life anchors, and the standing-no list.
+Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (especially §6, capacity is arithmetic), then `plate/config.md` for waking hours, life anchors, and the standing-no list.
 
 ## The arithmetic
 
@@ -19,7 +19,7 @@ waking window (config.md)
 = real hours
 ```
 
-Say each number. Then say the real-hours figure in plain words: "You have about 2 hours and 40 minutes of actual work time today, and it is split into three pieces, the longest being 75 minutes." The shape of the time matters as much as the total: a Feral brain needs one long block; a Foggy brain is fine with pieces.
+Say each number. Then take the lower of that ceiling and the good-day / bad-day work hours in `config.md` (Feral and Froggy are good days; Foggy and Fried are bad days). Say the real-hours figure in plain words: "You have about 2 hours and 40 minutes of actual work time today, and it is split into three pieces, the longest being 75 minutes." The shape of the time matters as much as the total: a Feral brain needs one long block; a Foggy brain is fine with pieces.
 
 ## What you flag
 

@@ -5,14 +5,14 @@ description: The gap finder. Cross-references the brain dump, the inbox, the cal
 
 # What's missing
 
-Read `../../RULES.md` first (§9, evidence labels), then every workspace file. This skill is only as good as the cross-reference, so read all of it.
+Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (§9, evidence labels), then every workspace file. This skill is only as good as the cross-reference, so read all of it.
 
 ## The eight checks
 
 Run every one. Report only the hits, with where each was found.
 
-1. **Commitment with no task.** An "I owe them" row from `inbox-sweep` (or a promise in the dump) that is not in Keep, Off my plate, or Later. Quote it.
-2. **Deadline with no slot.** Anything due inside 72 hours that has no calendar block and no Keep slot. Say the date and the gap.
+1. **Commitment with no task.** An "I owe them" row from `inbox-sweep` (or a promise in the dump) that is not in Keep, Off my plate, or `later.md`. Quote it.
+2. **Deadline with no slot.** Anything due inside 72 hours, on the Plate or in `later.md`, that has no calendar block and no Keep slot. Say the date and the gap.
 3. **Event with no prep.** A calendar event in the next 48 hours that implies presenting, deciding, or bringing something, with nothing on the Plate for it.
 4. **Person past nudge-by.** `waiting-on.md` rows whose nudge-by has passed. Offer the nudge as a DRAFT.
 5. **Graveyard due.** Rows whose revive-by is today or past. Surface each once, then move its revive-by forward 30 days or to `never` on the human's word.

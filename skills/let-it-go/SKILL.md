@@ -5,7 +5,7 @@ description: The guilt-free drop audit. Walks a to-do list or project list and n
 
 # Let it go
 
-Read `../../RULES.md` first (§7, letting go), then `plate/config.md`, `plate/graveyard.md`, and `plate/projects.md`.
+Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (§7, letting go), then `plate/config.md`, `plate/graveyard.md`, and `plate/projects.md`.
 
 ## The three questions, per item
 
@@ -20,7 +20,7 @@ Then sort the candidates:
 | Verdict | Means | Goes to |
 |---|---|---|
 | **Drop** | Nobody is waiting, they would not start it today | graveyard, `revive-by: never` |
-| **Defer** | Real, but not inside 30 days | graveyard, `revive-by: <date>` (whats-missing resurfaces it once, on that day) |
+| **Defer** | Real, but it should not be looked at again until a date | graveyard, `revive-by: <date>` (whats-missing resurfaces it once, on that day). Real and simply not today goes to `later.md` instead, no verdict needed. |
 | **Hand off** | Someone else can do it, or Claude can | Off-my-plate item with a gate, or a DRAFT asking the person |
 | **Shrink** | The ambition is the problem; the 10-minute version still counts | Stays, rewritten smaller |
 

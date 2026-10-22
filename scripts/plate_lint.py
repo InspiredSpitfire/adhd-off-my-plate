@@ -4,9 +4,21 @@
 A Plate is the one deliverable of this plugin. The model that wrote it is the
 worst judge of whether it kept to one next step, so a script checks instead.
 
+What it enforces: the seven sections; Keep limits per brain state (Feral 3,
+Froggy 3, Foggy 2, Fried 1); exactly one next step with a time box (≤ 10 min,
+Fried ≤ 5, "(0 min)" allowed); gates on every Off-my-plate item, with outward
+verbs at AUTO or DRAFT failing; revive-by on every Let-go item; one project and
+one ≤ 10 min step in Revive (Fried: the exact sentinel); a non-empty Missing
+section; Evidence with EVIDENCE and ASSUMED lines; dates outside Evidence
+labeled; banned tone phrases outside quoted evidence.
+
+The outward-verb check is a heuristic on the item's leading verb plus a list of
+execution verbs. It catches the common cases; it is not a proof. The
+plate-reviewer agent reads the items too.
+
 Exit 0 = PASS, 1 = FAIL (defects listed), 2 = could not read the file.
 
-Usage: python3 scripts/plate_lint.py plate/plate.md [--fried-ok]
+Usage: python3 scripts/plate_lint.py plate/plate.md
 """
 
 from __future__ import annotations
@@ -25,28 +37,44 @@ SECTIONS = [
     "Evidence",
 ]
 STATES = {"Feral", "Froggy", "Foggy", "Fried"}
-GATES = {"AUTO", "DRAFT", "NEEDS YOUR GO"}
-# Verbs that mean the item leaves the building. Any Off-my-plate line with one
-# of these must be gated NEEDS YOUR GO, not AUTO or DRAFT.
-OUTWARD = re.compile(
-    r"\b(send|sends|sending|sent|reply to|respond to|post|posts|publish|pay|pays|"
-    r"book|books|cancel|cancels|sign|signs|delete|deletes|unsubscribe|transfer|"
-    r"accept|decline|rsvp)\b",
+KEEP_LIMIT = {"Feral": 3, "Froggy": 3, "Foggy": 2, "Fried": 1}
+STEP_CAP = {"Feral": 10, "Froggy": 10, "Foggy": 10, "Fried": 5}
+GATES = ("NEEDS YOUR GO", "DRAFT", "AUTO")
+FRIED_REVIVE = "Revive: not today, on purpose."
+
+# Verbs that, as the item's leading verb, mean the item acts in the world.
+OUTWARD_VERBS = (
+    "send|email|e-mail|text|message|dm|call|phone|reply|respond|share|forward|post|publish|"
+    "schedule|book|reserve|order|buy|purchase|pay|submit|sign|cancel|delete|remove|"
+    "unsubscribe|transfer|accept|decline|rsvp|invite|confirm|approve|notify|tell|ask|ping|nudge"
+)
+# Verbs that, anywhere in the item, mean something is executed, not prepared.
+EXECUTE = re.compile(
+    r"\b(send|sends|sending|submit|submits|pay|pays|cancel|cancels|delete|deletes|book|books|"
+    r"sign|signs|transfer|transfers|publish|publishes|unsubscribe|buy|buys|order|orders|purchase|"
+    r"forward|forwards|hit send|press send)\b",
     re.IGNORECASE,
 )
-# "draft a reply" is fine at DRAFT; "reply" alone is outward. Strip drafting
-# phrasing before testing for outward verbs.
-DRAFTING = re.compile(r"\bdraft(s|ed|ing)?\b[^·]*?\b(reply|replies|response|decline|email|message|post)\b", re.IGNORECASE)
-MINUTES = re.compile(r"(\d+)\s*(?:min|mins|minutes)\b", re.IGNORECASE)
+# A second verb after a coordinator: "pull the thread and email Jordan".
+COORDINATED = re.compile(
+    rf"(?:\band\b|\bthen\b|;|,)\s+(?:{OUTWARD_VERBS})\b", re.IGNORECASE
+)
+LEADING = re.compile(rf"^\s*-\s*\[.\]\s*(?:{OUTWARD_VERBS})\b", re.IGNORECASE)
+DRAFTING_START = re.compile(
+    r"^\s*-\s*\[.\]\s*(?:draft|write|prepare|compose|pre-write|put together|pull together|outline)\b",
+    re.IGNORECASE,
+)
+TIMEBOX = re.compile(r"\((\d+)\s*(?:min|mins|minutes)\)\s*$", re.IGNORECASE)
+MENU = re.compile(r"\b(or|then|either|whichever|and also|alternatively)\b|\s/\s", re.IGNORECASE)
 BANNED = [
-    "just try harder",
-    "consistency is key",
-    "just use a calendar",
-    "you've got this",
-    "you got this",
-    "no excuses",
-    "hustle",
-    "discipline",
+    r"just try harder",
+    r"consistency is key",
+    r"just use a calendar",
+    r"you'?ve got this",
+    r"you got this",
+    r"no excuses",
+    r"\bhustle\b",
+    r"\bdiscipline\b",
 ]
 ISO_DATE = re.compile(r"\b(20\d\d-\d\d-\d\d)\b")
 
@@ -62,7 +90,7 @@ def split_sections(text: str) -> tuple[str, dict[str, str]]:
         if match:
             if current is not None:
                 sections[current] = "\n".join(buffer).strip()
-            current = match.group(1)
+            current = re.sub(r"\s*\(.*\)\s*$", "", match.group(1))  # "Keep (2 real hours)" → "Keep"
             buffer = []
         else:
             buffer.append(line)
@@ -75,14 +103,17 @@ def content_lines(block: str) -> list[str]:
     return [line for line in block.splitlines() if line.strip()]
 
 
-def lint(path: Path, fried_ok: bool = False) -> list[str]:
+def is_none_line(line: str) -> bool:
+    return re.fullmatch(r"-?\s*(nothing today|none|nothing)[.!]?\s*(·.*)?", line.strip(), re.IGNORECASE) is not None
+
+
+def lint(path: Path) -> list[str]:
     defects: list[str] = []
     text = path.read_text(encoding="utf-8")
     header, sections = split_sections(text)
 
-    # Header
     head = re.match(r"^#\s+The Plate\s+·\s+(\S+)\s+·\s+Brain:\s+(\w+)", header)
-    state = None
+    state = "Feral"
     if not head:
         defects.append("header: first line must be '# The Plate · YYYY-MM-DD · Brain: <state>'")
     else:
@@ -91,15 +122,18 @@ def lint(path: Path, fried_ok: bool = False) -> list[str]:
             defects.append(f"header: date {date!r} is not YYYY-MM-DD")
         if state not in STATES:
             defects.append(f"header: brain state {state!r} is not one of {sorted(STATES)}")
+            state = "Feral"
 
-    for name in SECTIONS:
-        if name not in sections:
-            defects.append(f"missing section '## {name}'")
-    if defects and any(d.startswith("missing section") for d in defects):
-        return defects  # structure too broken to check further
+    missing = [name for name in SECTIONS if name not in sections]
+    for name in missing:
+        defects.append(f"missing section '## {name}'")
+    if missing:
+        return defects
 
     # Off my plate
     for line in content_lines(sections["Off my plate"]):
+        if is_none_line(line):
+            continue
         if not line.lstrip().startswith("- "):
             defects.append(f"Off my plate: not a list item: {line.strip()[:60]!r}")
             continue
@@ -108,23 +142,29 @@ def lint(path: Path, fried_ok: bool = False) -> list[str]:
             defects.append(f"Off my plate: no gate tag (AUTO | DRAFT | NEEDS YOUR GO): {line.strip()[:60]!r}")
             continue
         body = line.split("· gate:")[0]
-        test_body = DRAFTING.sub("draft", body)
-        if OUTWARD.search(test_body) and gate != "NEEDS YOUR GO":
-            defects.append(
-                f"Off my plate: outward action gated {gate}, must be NEEDS YOUR GO: {line.strip()[:60]!r}"
-            )
+        short = line.strip()[:60]
+        if gate == "NEEDS YOUR GO":
+            continue
+        if gate == "DRAFT":
+            if not DRAFTING_START.match(body):
+                defects.append(f"Off my plate: DRAFT item must start with a drafting verb (draft, write, prepare…): {short!r}")
+            elif EXECUTE.search(body):
+                defects.append(f"Off my plate: DRAFT item also executes; must be NEEDS YOUR GO: {short!r}")
+        else:  # AUTO
+            if LEADING.match(body) or EXECUTE.search(body) or COORDINATED.search(body):
+                defects.append(f"Off my plate: outward action gated AUTO, must be NEEDS YOUR GO: {short!r}")
 
     # Keep
     keeps = [l for l in content_lines(sections["Keep"]) if re.match(r"^\s*\d+[.)]\s", l)]
-    limit = 1 if state == "Fried" else 3
+    limit = KEEP_LIMIT[state]
     if not keeps:
-        defects.append("Keep: needs at least one numbered item (on Fried, 'rest' counts)")
+        defects.append("Keep: needs at least one numbered item (on Fried, '1. Rest.' counts)")
     elif len(keeps) > limit:
         defects.append(f"Keep: {len(keeps)} items; maximum is {limit} for brain state {state}")
 
     # Let go
     for line in content_lines(sections["Let go"]):
-        if line.strip().lower() in {"- nothing today", "- none"}:
+        if is_none_line(line):
             continue
         if not line.lstrip().startswith("- "):
             defects.append(f"Let go: not a list item: {line.strip()[:60]!r}")
@@ -138,28 +178,31 @@ def lint(path: Path, fried_ok: bool = False) -> list[str]:
 
     # Next step
     steps = content_lines(sections["Next step"])
+    cap = STEP_CAP[state]
     if len(steps) != 1:
         defects.append(f"Next step: must be exactly one line, found {len(steps)}")
     else:
         step = steps[0]
         if not step.lstrip().startswith(">"):
             defects.append("Next step: line must start with '>'")
-        if re.search(r"\b(or|then|and then|either)\b", step, re.IGNORECASE):
-            defects.append("Next step: contains 'or' / 'then' / 'either'; that is a menu, not a step")
-        if re.search(r"(^|\s)[-*]\s|\d+[.)]\s", step.lstrip(">").strip()):
-            defects.append("Next step: contains list markers; one action only")
-        mins = MINUTES.search(step)
-        cap = 5 if state == "Fried" else 10
+        body = step.lstrip(">").strip()
+        if MENU.search(body):
+            defects.append("Next step: contains 'or' / 'then' / 'either' / 'whichever' / '/'; that is a menu, not a step")
+        if re.match(r"^(?:[-*]\s|\d+[.)]\s)", body):
+            defects.append("Next step: starts with a list marker; one action, as a sentence")
+        mins = TIMEBOX.search(body)
         if not mins:
-            defects.append(f"Next step: no time box found (write '… (≤ {cap} min)')")
+            defects.append(f"Next step: must end with a time box like '(≤ {cap} min)' → write '(N min)'; '(0 min)' is allowed for nothing-on-purpose")
         elif int(mins.group(1)) > cap:
             defects.append(f"Next step: {mins.group(1)} min exceeds the {cap} min cap for {state}")
 
     # Revive one
-    revive = sections["Revive one"]
-    if state == "Fried" and re.search(r"not today", revive, re.IGNORECASE):
+    revive = sections["Revive one"].strip()
+    if state == "Fried" and revive == FRIED_REVIVE:
         pass
     else:
+        if state == "Fried" and "not today" in revive.lower():
+            defects.append(f"Revive one: on Fried the section is exactly {FRIED_REVIVE!r}, nothing else")
         projects = re.findall(r"\*\*Project:\*\*", revive)
         tiny = re.findall(r"\*\*Tiny step:\*\*(.*)", revive)
         if len(projects) != 1:
@@ -167,12 +210,12 @@ def lint(path: Path, fried_ok: bool = False) -> list[str]:
         if len(tiny) != 1:
             defects.append(f"Revive one: exactly one '**Tiny step:**' line required, found {len(tiny)}")
         else:
-            mins = MINUTES.search(tiny[0])
+            mins = TIMEBOX.search(tiny[0].strip())
             if not mins:
-                defects.append("Revive one: tiny step has no time box (≤ 10 min)")
+                defects.append("Revive one: tiny step must end with a time box '(N min)', N ≤ 10")
             elif int(mins.group(1)) > 10:
                 defects.append(f"Revive one: tiny step is {mins.group(1)} min; cap is 10")
-            if re.search(r"\b(or|then)\b", tiny[0], re.IGNORECASE):
+            if MENU.search(tiny[0]):
                 defects.append("Revive one: tiny step contains 'or' / 'then'; one step only")
         if "stalled because" not in revive:
             defects.append("Revive one: missing 'stalled because <one clause>'")
@@ -188,21 +231,22 @@ def lint(path: Path, fried_ok: bool = False) -> list[str]:
     if not re.search(r"^ASSUMED:\s*\S", evidence, re.MULTILINE):
         defects.append("Evidence: needs an 'ASSUMED: …' line ('ASSUMED: none' is fine)")
 
-    # Dates outside Evidence must be labeled or present in Evidence
+    # Dates outside Evidence must be cited there or labeled on their own line
     cited = set(ISO_DATE.findall(evidence))
-    for name in ("Keep", "Next step", "Let go", "Revive one", "What you're missing"):
-        for date in ISO_DATE.findall(sections[name]):
-            line = next((l for l in sections[name].splitlines() if date in l), "")
-            if name == "Let go" and "revive-by:" in line and date in line.split("revive-by:", 1)[1]:
-                continue  # revive-by dates are decisions, not facts
-            if date not in cited and not re.search(r"ASSUMED|INFERENCE", line):
-                defects.append(f"{name}: date {date} is not in Evidence and not labeled INFERENCE/ASSUMED")
+    for name in ("Off my plate", "Keep", "Next step", "Let go", "Revive one", "What you're missing"):
+        for line in sections[name].splitlines():
+            labeled = re.search(r"ASSUMED|INFERENCE", line)
+            for date in ISO_DATE.findall(line):
+                if name == "Let go" and "revive-by:" in line and date in line.split("revive-by:", 1)[1]:
+                    continue  # revive-by dates are decisions, not facts
+                if date not in cited and not labeled:
+                    defects.append(f"{name}: date {date} is not in Evidence and not labeled INFERENCE/ASSUMED")
 
-    # Tone
-    lowered = text.lower()
-    for phrase in BANNED:
-        if phrase in lowered:
-            defects.append(f"tone: banned phrase {phrase!r}")
+    # Tone, outside the Evidence section (quotes of the human's own words live there)
+    prose = "\n".join(v for k, v in sections.items() if k != "Evidence").lower()
+    for pattern in BANNED:
+        if re.search(pattern, prose):
+            defects.append(f"tone: banned phrase {pattern.strip(chr(92)+'b')!r}")
 
     return defects
 
@@ -216,7 +260,7 @@ def main(argv: list[str]) -> int:
     if not path.is_file():
         print(f"ERROR: {path} not found", file=sys.stderr)
         return 2
-    defects = lint(path, fried_ok="--fried-ok" in argv)
+    defects = lint(path)
     if defects:
         print(f"FAIL: {path} · {len(defects)} defect(s)")
         for d in defects:

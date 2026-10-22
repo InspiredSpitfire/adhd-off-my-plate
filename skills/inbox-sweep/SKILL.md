@@ -5,7 +5,7 @@ description: Turns an inbox into commitments, requests, decisions, deadlines, an
 
 # Inbox sweep
 
-Read `../../RULES.md` first, then `plate/config.md` (people who matter, standing no's) and `plate/waiting-on.md`.
+Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first, then `plate/config.md` (people who matter, standing no's) and `plate/waiting-on.md`.
 
 ## What you read
 
@@ -23,7 +23,7 @@ One ledger, five tables. Every row cites sender, subject, and date. Quote the se
 
 ## What you draft
 
-For every "I owe them" row that can be closed with a reply of under 150 words, write the reply in the human's voice from `config.md`. Put it where the connector's draft tool puts drafts (`DRAFT` gate). If the connector has no draft tool, write it into the ledger under the row and mark `NEEDS YOUR GO`. Never send. Never reply-all. Never promise a date the human did not give you; write "by [DATE?]" and flag it.
+For every "I owe them" row that can be closed with a reply of under 150 words, write the reply in the human's voice from `config.md`. Put it in the connector's drafts folder if there is a draft tool, otherwise in `plate/drafts/<slug>.md`; both are `DRAFT` gate. Never send. Never reply-all. Never promise a date the human did not give you; write "by [DATE?]" and flag it.
 
 For a "no" (declining a request), write the no plainly, with one reason or none, no apology spiral. Offer a redirect only if one is real.
 
