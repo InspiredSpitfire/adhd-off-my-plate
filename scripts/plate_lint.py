@@ -52,15 +52,15 @@ OUTWARD_VERBS = (
 EXECUTE = re.compile(
     r"\b(send|sends|sending|submit|submits|pay|pays|cancel|cancels|delete|deletes|book|books|"
     r"sign|signs|transfer|transfers|publish|publishes|unsubscribe|buy|buys|order|orders|purchase|"
-    r"forward|forwards|hit send|press send|email it|text it|message it|post it|share it|schedule it|"
-    r"rsvp|archive|archives|label|labels|move|moves|mark as)\b",
+    r"forward|forwards|hit send|press send|hit reply|email it|text it|message it|post it|share it|schedule it|"
+    r"mail it|put it live|shoot it over|drop it in|ping|rsvp|archive|archives|label|labels|move(?![- ]in)|moves|mark as)\b",
     re.IGNORECASE,
 )
 # Noun and idiom collisions that are not actions; stripped before the verb checks.
 NOT_ACTIONS = re.compile(
     r"\b(purchase orders?|sign[- ]?ups?|sign[- ]up sheets?|book clubs?|pay schedules?|pay stubs?|"
     r"call(?:s|ed|ing)? out|order (?:oldest|newest|by|of)|confirm(?:s|ed|ing)? (?:from|against|that)|"
-    r"post[- ]?its?|the (?:email|text|message|post|order|call|invoice|book|sign))\b",
+    r"post-its?|cancel(?:lation)? polic(?:y|ies)|delete-account|the (?:email|text|message|post|order|call|invoice|book|sign|move|transfer|booking))\b",
     re.IGNORECASE,
 )
 # A second verb after a coordinator: "pull the thread and email Jordan".
