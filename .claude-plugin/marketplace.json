@@ -1,0 +1,17 @@
+{
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
+  "name": "adhd-off-my-plate",
+  "owner": {
+    "name": "Inspired Spitfire"
+  },
+  "metadata": {
+    "description": "ADHD: Off My Plate? by Inspired Spitfire."
+  },
+  "plugins": [
+    {
+      "name": "adhd-off-my-plate",
+      "source": "./",
+      "description": "A chief of staff for one ADHD brain: brain dump, to-do list, inbox, calendar, and unfinished projects in; one Plate out. Seven skills, five commands, an independent reviewer, and a lint script that fails any Plate with more than one next step."
+    }
+  ]
+}
