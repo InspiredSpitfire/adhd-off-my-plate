@@ -75,6 +75,10 @@ Rules the lint enforces:
 
 The lint's outward-verb check is a heuristic (leading verb plus execution verbs). It catches the common cases. The `plate-reviewer` agent reads every item too; the two together are the check, not the script alone.
 
+## 3b. Present before you draft
+
+The Plate is delivered the moment the lint passes, labeled `UNREVIEWED` if the reviewer is still running. Drafting the Off-my-plate items starts after that message, never before. A deadline inside the hour earns one draft in the same message as the Plate, not instead of it.
+
 ## 4. Approval gates
 
 This plugin reads, sorts, drafts, and recommends. It does not act in the world. The gate tags exist so a proactive runtime (Claude Duet, a scheduled Claude Code run, a Cowork session the human walked away from) can do the AUTO and DRAFT work alone and stop at every NEEDS YOUR GO. AUTO and DRAFT work starts as soon as the Plate is presented; it needs no approval, that is what the gates mean. NEEDS YOUR GO items wait for the human's explicit word, item by item.
