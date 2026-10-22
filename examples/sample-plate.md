@@ -6,12 +6,12 @@
 - [ ] Draft the invoice email to the agency for $1,200 using the last invoice as the template · gate: DRAFT · Gmail drafts
 - [ ] Draft a two-line "no" to the Thursday coffee request · gate: DRAFT · Gmail drafts
 - [ ] Cancel the Figma seat · gate: NEEDS YOUR GO · figma.com billing
-- [ ] Find the dentist's reply-by text and pull the two offered times into the Plate · gate: AUTO · plate/plate.md
-- [ ] Look up the Q3 estimated tax deadline on irs.gov and write the date here with the source · gate: AUTO · plate/plate.md
+- [ ] Find the dentist's text and pull the two offered times into plate/notes/ · gate: AUTO · plate/notes/2026-10-20-dentist-times.md
+- [ ] Look up the Q3 estimated tax deadline on irs.gov and write the date with its source · gate: AUTO · plate/notes/2026-10-20-tax-deadline.md
 
 ## Keep (2 real hours, longest block 75 min)
 1. Send the agency invoice once the draft is in your inbox: $1,200 outstanding, and money outranks everything else on the list today.
-2. Text the dentist back with one of the two offered times (both are in the Plate now).
+2. Text the dentist back with one of the two offered times (they land in plate/notes/ as soon as the AUTO item above runs).
 
 ## Let go
 - Redo the whole website → graveyard · revive-by: 2026-12-01 · Nobody is waiting, and "redo everything" is what a Foggy brain reaches for instead of the invoice.

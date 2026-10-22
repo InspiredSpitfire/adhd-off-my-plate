@@ -1,11 +1,7 @@
 ---
 name: plate-reviewer
 description: Independent reviewer for a finished Plate. Runs the lint, then checks the Plate against the workspace, the inbox ledger, and the calendar report for invented deadlines, missing gates, more than one next step, Keeps that exceed capacity, and gaps that were in the evidence but not on the Plate. Returns PASS or NEEDS REVISION with specific defects. Use after plate-triage or morning-plate produces a Plate, or when the user says "check the plate", "is this right", "second pair of eyes", "review today's plate". It reviews; it does not rewrite.
-tools:
-  - Read
-  - Glob
-  - Grep
-  - Bash
+tools: Read, Glob, Grep, Bash
 ---
 
 # Plate reviewer

@@ -9,7 +9,7 @@ This is `plate-triage` with the human absent. Read `${CLAUDE_PLUGIN_ROOT}/RULES.
 
 ## Unattended rules
 
-1. **No questions.** Brain state: read yesterday's Plate, the time of day, and any note in `config.md` about typical mornings; mark it ASSUMED and say so in the brief's first line. The human corrects it with one word and you re-plate.
+1. **No questions.** Brain state: read yesterday's Plate (on a first run it is the blank template; skip it), the time of day, and any note in `config.md` about typical mornings; mark it ASSUMED and say so in the brief's first line. The human corrects it with one word and you re-plate.
 2. **Dedupe.** Read `plate/history/` for the last 7 Plates. A gap already surfaced twice is not surfaced a third time unless its deadline is inside 48 hours. A Let-go item already vetoed is not re-proposed. A nudge already drafted is not drafted again. Nagging is how a chief of staff gets ignored.
 3. **Do the AUTO work.** File, sort, summarize, write into the workspace. Do it, then report it as DONE.
 4. **Do the DRAFT work.** Replies and declines go into the connector's drafts folder or the workspace. Report each as DRAFTED, with where.
