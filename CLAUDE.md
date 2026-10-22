@@ -14,7 +14,7 @@ A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (name
 
 ## Rules
 - The Plate has exactly one next step. Not a menu. The lint enforces it; do not soften the lint.
-- Nothing is sent, paid, booked, cancelled, or deleted by this plugin. Every "off my plate" item carries a gate: `AUTO` (reading, sorting, drafting into the workspace), `DRAFT` (a draft the human sends), `NEEDS YOUR GO` (anything that leaves the building). The lint fails a send-shaped item marked AUTO.
+- Nothing is sent, paid, booked, cancelled, or deleted by this plugin. Every "off my plate" item carries a gate: `AUTO` (reading, sorting, filing, writing into the workspace), `DRAFT` (text only; the human sends), `NEEDS YOUR GO` (anything that leaves the building). The lint fails outward verbs at AUTO or DRAFT by heuristic; the reviewer agent reads the rest.
 - Letting go is a move to the graveyard with a revive-by date or `never`. It is not deletion. Revival rights are the whole reason an ADHD brain can let go.
 - The Brain-State System (Feral, Froggy, Foggy, Fried) is Inspired Spitfire's framework: four states, never renamed, definitions in RULES §5 and authoritative in `she-rebels-brand-kit`. Skill internals stay plain so any user can run them in their own voice.
 - Never invent a deadline, a sender, a commitment, or a calendar event. Everything in a Plate is EVIDENCE (quoted), INFERENCE (reasoned, stated), or ASSUMED (a guess the human can correct).

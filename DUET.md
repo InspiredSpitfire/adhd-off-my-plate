@@ -25,8 +25,8 @@ Written 2026-10-22, the day after Anthropic announced Claude Duet. Everything be
 | `DRAFT` items | Duet writes them into drafts. |
 | `NEEDS YOUR GO` items | Duet's approval step. This plugin's gates are designed to line up with Duet's own stop points, so the brief's "Needs your go" block is the same list Duet would pause on. (INFERENCE.) |
 | The brief | The morning brief. Phone-sized on purpose. |
-| `plate-reviewer` | Runs before the brief goes out. If it fails twice, the brief ships labeled UNREVIEWED rather than late. |
-| Mid-day alerts | `whats-missing` with a 48-hour deadline filter, on Duet's every-few-hours check. Dedupe against the last 7 Plates so it does not nag. |
+| `plate_lint.py` and `plate-reviewer` | Run before the brief goes out when the runtime has a shell and plugin agents. (ASSUMED: nothing in coverage says Duet's cloud machine exposes a shell or runs plugin subagents. If it does not, `morning-plate` applies the §3 checklist by hand and labels the brief UNLINTED, UNREVIEWED.) |
+| Mid-day alerts | `whats-missing` with a 48-hour deadline filter, on Duet's every-few-hours check (FACT: coverage says it checks every few hours and alerts when something needs attention). Dedupe against the last 7 Plates so it does not nag. (INFERENCE: whether a plugin skill can be the thing it runs on each check is unconfirmed.) |
 
 ## What this demonstrates for a Duet application
 

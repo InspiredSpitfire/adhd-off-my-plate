@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.1.0 (2026-10-22). Built, linted, independently reviewed. Not yet run on a live inbox. Not published.
+> Status: v0.1.0 (2026-10-22). Built and linted; smoke-tested on the sample dump with no connectors; independent review in progress (see the commit log for the verdict). Not yet run on a live inbox. Not published.
 
 ## What you hand it
 
@@ -36,7 +36,7 @@ Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO. Nothing g
 |---|---|
 | "Be my assistant" in a chat box | Seven skills that read one shared workspace and one rulebook |
 | Gives you a prioritized list | Gives you a **shorter** list and makes the demotions for you |
-| "Don't send anything" is a sentence you hope it read | Every item carries a gate, and a script fails any outward action marked AUTO |
+| "Don't send anything" is a sentence you hope it read | Every item carries a gate; a script fails items whose verb leaves the building but are marked AUTO or DRAFT, and a reviewer agent reads the rest |
 | Deletes what you drop | Moves it to a **graveyard** with revival rights; you can let go because it isn't gone |
 | Assumes you're the same person every day | Sizes the day to **Feral, Froggy, Foggy, or Fried** you |
 | "Here are 5 next steps" | **One** next step. A list of options is a decision, and a decision is the thing this brain can't spare |
@@ -59,7 +59,7 @@ Commands: `/plate`, `/morning`, `/let-go`, `/revive`, `/missing`.
 
 ## Built for Claude Duet
 
-Duet is a proactive agent that runs on its own cloud machine, checks your connected apps every few hours, sends a morning brief, and asks before it sends, pays, or deletes. That is exactly the shape of `morning-plate`. See [DUET.md](DUET.md) for the mapping, with every Duet fact labeled by source, and for the parts Duet can't do yet.
+Duet is a proactive agent that runs on its own cloud machine, checks your connected apps every few hours, sends a morning brief, and asks before it sends, pays, or deletes (per launch coverage, sources in DUET.md). That is exactly the shape of `morning-plate`. See [DUET.md](DUET.md) for the mapping, with every Duet fact labeled by source, and for the parts Duet can't do yet.
 
 ## Install
 

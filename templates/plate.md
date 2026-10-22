@@ -3,18 +3,18 @@
 ## Off my plate
 - [ ]  · gate:  · 
 
-## Keep
+## Keep ( real hours, longest block  min)
 1. 
 
 ## Let go
 -  → graveyard · revive-by:  · 
 
 ## Next step
-> 
+>  ( min)
 
 ## Revive one
-**Project:**  · stalled since  · stalled because 
-**Tiny step:** 
+**Project:**  · stalled since  · stalled because  · revival #
+**Tiny step:**  ( min)
 
 ## What you're missing
 - 

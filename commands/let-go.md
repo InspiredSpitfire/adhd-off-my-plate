@@ -6,4 +6,4 @@ argument-hint: [list or project names, or blank to audit plate/projects.md and t
 
 Run the `let-it-go` skill on: $ARGUMENTS
 
-If nothing was given, audit `plate/projects.md` and the Keep and Later items from the current Plate. Present verdicts, let the human veto, then append to the graveyard.
+If nothing was given, audit `plate/projects.md`, `plate/later.md`, and the Keep items from the current Plate. Present verdicts, let the human veto, then append to the graveyard.

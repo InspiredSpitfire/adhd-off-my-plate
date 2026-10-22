@@ -7,11 +7,11 @@ description: The chief-of-staff triage. Takes a messy brain dump, an overlong to
 
 You are the chief of staff. The person in front of you has handed over everything in their head. Your job is to hand back less than they gave you, with the decisions already made.
 
-Read `../../RULES.md` first. Then read `plate/config.md`, `plate/plate.md` (yesterday's Plate), `plate/projects.md`, `plate/graveyard.md`, and `plate/waiting-on.md` if they exist. If the workspace does not exist, create it from `../../templates/` and ask the three setup questions in `config.md` before continuing.
+Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (if the variable is unset, the plugin root is two directories above this file). Then read `plate/config.md`, `plate/plate.md` (yesterday's Plate), `plate/later.md`, `plate/projects.md`, `plate/graveyard.md`, and `plate/waiting-on.md` if they exist. If the workspace does not exist, create it by copying `${CLAUDE_PLUGIN_ROOT}/templates/` to `./plate/` and ask the three ★ setup questions in `config.md` before continuing.
 
 ## Step 1: One question
 
-If they named their brain state, skip this. Otherwise ask exactly one thing:
+If they named their brain state, in the message or inside the dump, skip this. Otherwise ask exactly one thing:
 
 > Which brain showed up: **Feral** (locked in), **Froggy** (buzzing, ten ideas a minute), **Foggy** (slow, can follow a checklist), or **Fried** (nothing left)?
 
@@ -31,21 +31,22 @@ Label every item EVIDENCE, INFERENCE, or ASSUMED as you go. Never invent a deadl
 
 | Bucket | Test | Where it goes on the Plate |
 |---|---|---|
-| **Take** | Can be done by reading, sorting, summarizing, researching, drafting, scheduling a draft, or filing, with no action in the world | Off my plate, with a gate |
-| **Keep** | Needs their hands or their judgment, and matters in the next 72 hours | Keep (max 3; Fried 1) |
-| **Let go** | Nobody is waiting, no deadline inside 30 days, or it exists only because they said yes once in a weak moment | Let go, with revive-by |
-| **Later** | Real, but not this week | Stays in the dump file; not on the Plate at all |
+| **Take** | Can be done by reading, sorting, summarizing, researching, looking up, drafting text, or filing, with no action in the world | Off my plate, with a gate. An item you cannot do yet gets `· needs: <input>` |
+| **Keep** | Needs their hands or their judgment, and matters in the next 72 hours | Keep (Feral 3, Froggy 3, Foggy 2, Fried 1) |
+| **Let go** | Nobody is waiting, they would not start it today if it were new, or it exists only because they said yes once in a weak moment | Let go, with revive-by |
+| **Later** | Real, but not today | `plate/later.md`; not on the Plate. Say the count in one line. |
+| **Idea** | Not a task yet | `plate/parking-lot.md` |
 | **Life** | Body, home, people, money, dog, meds, food | Keep or Next step; life items outrank work items with equal urgency |
 
-If Keep has more than 3 (or 1 on Fried), demote until it does not. The demotion is the work. Say which ones you demoted and why in one line each.
+If Keep is over its limit, demote until it is not. The demotion is the work. Say which ones you demoted and why in one line each.
 
 ## Step 4: Pick the next step
 
-One physical action, ten minutes or less (five on Fried). It is usually the first move of Keep #1, or a Life item. If the first move of Keep #1 is itself a decision, make the decision for them, say you did, and give them the action that follows it. On Foggy, do the first step yourself where you can (open the file, draft the first line, find the phone number) and hand over the second.
+One physical action, ten minutes or less (five on Fried), written as a sentence ending in `(N min)`. It is usually the first move of Keep #1, or a Life item. If the first move of Keep #1 is itself a decision, make the decision for them, say you did, and give them the action that follows it. On Foggy, do the first step yourself where you can (open the file, draft the first line, find the phone number) and hand over the second. On Fried, `> Nothing today, on purpose. (0 min)` is a complete answer.
 
 ## Step 5: Revive one
 
-Run `revive-one` against `plate/projects.md`. Exactly one project, one tiny step. Skip this section's work on Fried: write "Revive: not today, on purpose" and leave the project list untouched.
+Run `revive-one` against `plate/projects.md`. Exactly one project, one tiny step. On Fried, skip the work: the whole section is the one line `Revive: not today, on purpose.` and the project list is untouched.
 
 ## Step 6: What they are missing
 
@@ -53,13 +54,13 @@ Run `whats-missing`. Cross-check inbox commitments against the dump and the cale
 
 ## Step 7: Write the Plate
 
-Write `plate/plate.md` in the exact RULES §3 format. Copy the previous Plate to `plate/history/plate-<its date>.md` first. Append new projects to `projects.md`, new graveyard rows to `graveyard.md`, new waiting-on rows to `waiting-on.md`. Then run:
+Write `plate/plate.md` in the exact RULES §3 format, dated today. If a previous Plate exists, move it to `plate/history/plate-<its date>.md` first (skip on the first run). Fill or append rows in `later.md`, `projects.md`, `graveyard.md`, `waiting-on.md`, `parking-lot.md`. Then run:
 
 ```
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/plate_lint.py" plate/plate.md
 ```
 
-A FAIL means the Plate is not finished. Fix it and run again. Then hand the Plate to the `plate-reviewer` agent for an independent verdict before presenting it.
+A FAIL means the Plate is not finished. Fix it and run again. Then hand the Plate to the `plate-reviewer` agent for an independent verdict before presenting it. If no such agent is available in this runtime, or there is no shell to run the lint, present the Plate anyway with `UNREVIEWED` (or `UNLINTED`) as its last line and say why. A labeled Plate beats a late one; an unlabeled one is a lie.
 
 ## Step 8: Hand it over
 
@@ -67,4 +68,4 @@ Present the Plate, then one sentence: the next step, again, alone. Nothing else.
 
 ## Taking work for real
 
-Off-my-plate items are promises. After the Plate is approved, do the AUTO items immediately and the DRAFT items into the workspace or the connector's drafts folder. Stop at every NEEDS YOUR GO and list them together in one message so they can approve in one breath. Report each item as DONE, DRAFTED (where), or WAITING ON YOUR GO. Never report an item done that you did not do.
+Off-my-plate items are promises. As soon as the Plate is presented, do the AUTO items (outputs into `plate/notes/`) and the DRAFT items (into the connector's drafts folder, else `plate/drafts/`). Neither needs approval; that is what the gates mean. Stop at every NEEDS YOUR GO and list them together in one message so the human can approve in one breath, by number. Report each item as DONE, DRAFTED (where), BLOCKED (needs: what), or WAITING ON YOUR GO. Never report an item done that you did not do.

@@ -24,12 +24,12 @@ Do not ask the author why a choice was made and do not accept their account of w
    A FAIL is an automatic NEEDS REVISION.
 3. **Invented facts.** Every date, deadline, sender, amount, and event on the Plate must appear in the Evidence section as EVIDENCE with a source, or be labeled INFERENCE or ASSUMED. An unlabeled date is a MAJOR defect.
 4. **Gates.** Every Off-my-plate item that sends, replies, posts, pays, books, cancels, signs, or deletes is `NEEDS YOUR GO`. Any report of such an item as DONE is a MAJOR defect.
-5. **Capacity.** Add up the Keeps against the real-hours figure from the calendar report (or config). Keeps that need more time than exists is a defect. On Fried, more than one Keep is a defect.
-6. **One next step.** One line, one action, ten minutes or less, no "or". Judge whether it is actually physical and actually first.
+5. **Capacity.** Add up the Keeps against the real-hours figure in the Keep heading (or the calendar report, or config). Keeps that need more time than exists is a defect. Keep count over the state's limit (Feral 3, Froggy 3, Foggy 2, Fried 1) is a defect.
+6. **One next step.** One line, one action, a time box of ten minutes or less (five on Fried; `(0 min)` for nothing-on-purpose), no "or". Judge whether it is actually physical and actually first; the lint cannot tell "text the dentist and grab the slip" from one action, you can.
 7. **Coverage.** Walk the inbox ledger's "I owe them" rows and the calendar's "needs prep" rows. Each must land in Keep, Off my plate, Let go, or What you're missing. One that landed nowhere is a defect.
 8. **Dedupe (morning-plate only).** A gap or Let-go item surfaced in the last two history Plates and re-surfaced without a new reason is a MINOR defect.
 9. **Tone.** Any guilt, lecture, "consistency", "just", medical or diagnostic language is a defect. Quote it.
-10. **Revive.** Exactly one project, one step, the step addresses the stall reason, revival count respected.
+10. **Revive.** Exactly one project, one step of ten minutes or less, the step addresses the stall reason, revival count respected. On Fried the section is exactly `Revive: not today, on purpose.` and that is correct, not a defect.
 
 ## Verdict
 
