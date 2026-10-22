@@ -52,20 +52,31 @@ OUTWARD_VERBS = (
 EXECUTE = re.compile(
     r"\b(send|sends|sending|submit|submits|pay|pays|cancel|cancels|delete|deletes|book|books|"
     r"sign|signs|transfer|transfers|publish|publishes|unsubscribe|buy|buys|order|orders|purchase|"
-    r"forward|forwards|hit send|press send)\b",
+    r"forward|forwards|hit send|press send|email it|text it|message it|post it|share it|schedule it|"
+    r"rsvp|archive|archives|label|labels|move|moves|mark as)\b",
+    re.IGNORECASE,
+)
+# Noun and idiom collisions that are not actions; stripped before the verb checks.
+NOT_ACTIONS = re.compile(
+    r"\b(purchase orders?|sign[- ]?ups?|sign[- ]up sheets?|book clubs?|pay schedules?|pay stubs?|"
+    r"call(?:s|ed|ing)? out|order (?:oldest|newest|by|of)|confirm(?:s|ed|ing)? (?:from|against|that)|"
+    r"post[- ]?its?|the (?:email|text|message|post|order|call|invoice|book|sign))\b",
     re.IGNORECASE,
 )
 # A second verb after a coordinator: "pull the thread and email Jordan".
 COORDINATED = re.compile(
     rf"(?:\band\b|\bthen\b|;|,)\s+(?:{OUTWARD_VERBS})\b", re.IGNORECASE
 )
-LEADING = re.compile(rf"^\s*-\s*\[.\]\s*(?:{OUTWARD_VERBS})\b", re.IGNORECASE)
+LEADING = re.compile(rf"^\s*-\s*\[.\]\s*(?:{OUTWARD_VERBS}|archive|label|move|mark)(?:s|ed|ing)?\b", re.IGNORECASE)
 DRAFTING_START = re.compile(
     r"^\s*-\s*\[.\]\s*(?:draft|write|prepare|compose|pre-write|put together|pull together|outline)\b",
     re.IGNORECASE,
 )
 TIMEBOX = re.compile(r"\((\d+)\s*(?:min|mins|minutes)\)\s*$", re.IGNORECASE)
-MENU = re.compile(r"\b(or|then|either|whichever|and also|alternatively)\b|\s/\s", re.IGNORECASE)
+MENU = re.compile(
+    r"\b(or|then|either|whichever|and also|alternatively|instead|otherwise|pick one|if that)\b|\s/\s|:\s*\w[^,]*,\s*\w[^,]*,",
+    re.IGNORECASE,
+)
 BANNED = [
     r"just try harder",
     r"consistency is key",
@@ -109,7 +120,7 @@ def is_none_line(line: str) -> bool:
 
 def lint(path: Path) -> list[str]:
     defects: list[str] = []
-    text = path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8").replace("\u2019", "'").replace("\u2018", "'")
     header, sections = split_sections(text)
 
     head = re.match(r"^#\s+The Plate\s+·\s+(\S+)\s+·\s+Brain:\s+(\w+)", header)
@@ -141,15 +152,15 @@ def lint(path: Path) -> list[str]:
         if gate is None:
             defects.append(f"Off my plate: no gate tag (AUTO | DRAFT | NEEDS YOUR GO): {line.strip()[:60]!r}")
             continue
-        body = line.split("· gate:")[0]
+        body = NOT_ACTIONS.sub("", line.split("· gate:")[0])
         short = line.strip()[:60]
         if gate == "NEEDS YOUR GO":
             continue
         if gate == "DRAFT":
             if not DRAFTING_START.match(body):
                 defects.append(f"Off my plate: DRAFT item must start with a drafting verb (draft, write, prepare…): {short!r}")
-            elif EXECUTE.search(body):
-                defects.append(f"Off my plate: DRAFT item also executes; must be NEEDS YOUR GO: {short!r}")
+            elif EXECUTE.search(body) or COORDINATED.search(body):
+                defects.append(f"Off my plate: DRAFT item also acts (\"draft it and send it\"); must be NEEDS YOUR GO: {short!r}")
         else:  # AUTO
             if LEADING.match(body) or EXECUTE.search(body) or COORDINATED.search(body):
                 defects.append(f"Off my plate: outward action gated AUTO, must be NEEDS YOUR GO: {short!r}")
@@ -198,11 +209,10 @@ def lint(path: Path) -> list[str]:
 
     # Revive one
     revive = sections["Revive one"].strip()
-    if state == "Fried" and revive == FRIED_REVIVE:
-        pass
-    else:
-        if state == "Fried" and "not today" in revive.lower():
+    if state == "Fried":
+        if revive != FRIED_REVIVE:
             defects.append(f"Revive one: on Fried the section is exactly {FRIED_REVIVE!r}, nothing else")
+    else:
         projects = re.findall(r"\*\*Project:\*\*", revive)
         tiny = re.findall(r"\*\*Tiny step:\*\*(.*)", revive)
         if len(projects) != 1:
@@ -219,6 +229,8 @@ def lint(path: Path) -> list[str]:
                 defects.append("Revive one: tiny step contains 'or' / 'then'; one step only")
         if "stalled because" not in revive:
             defects.append("Revive one: missing 'stalled because <one clause>'")
+        if not re.search(r"revival #\d+", revive):
+            defects.append("Revive one: missing 'revival #N' (read it from projects.md; 0 for a first revival)")
 
     # What you're missing
     if not content_lines(sections["What you're missing"]):
