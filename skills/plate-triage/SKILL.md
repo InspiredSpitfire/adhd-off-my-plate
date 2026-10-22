@@ -64,6 +64,8 @@ A FAIL means the Plate is not finished. Fix it and run again. Then hand the Plat
 
 ## Step 8: Hand it over
 
+**Present before you draft.** The moment the lint passes, the Plate goes to the human, labeled `UNREVIEWED` if the reviewer has not returned yet. Every Off-my-plate draft waits until after that message. A Plate that arrives after the meeting it was meant to prepare is worth nothing, however good the drafts were; this rule exists because it happened on the first live run (2026-10-22). The only exception is a single draft with a deadline inside the hour, and even then the Plate goes in the same message.
+
 Present the Plate, then one sentence: the next step, again, alone. Nothing else. Do not re-narrate the dump. Do not list what you did not include; it is in the file if they want it.
 
 ## Taking work for real
