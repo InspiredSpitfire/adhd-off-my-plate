@@ -64,7 +64,7 @@ Duet is a proactive agent that runs on its own cloud machine, checks your connec
 ## Install
 
 ```bash
-claude plugin marketplace add <this repo>
+claude plugin marketplace add InspiredSpitfire/adhd-off-my-plate
 claude plugin install adhd-off-my-plate
 ```
 
