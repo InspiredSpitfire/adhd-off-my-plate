@@ -1,6 +1,6 @@
 # ADHD: Off My Plate? (Claude Code plugin)
 
-A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (named by Inspired Spitfire 2026-10-22). Slug: `adhd-off-my-plate`. Status: v0.1.0 built 2026-10-22, public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on Amanda's explicit go), no live run yet. Built as the demo for Amanda's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
+A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (named by Inspired Spitfire 2026-10-22). Slug: `adhd-off-my-plate`. Status: v0.1.0 built 2026-10-22, public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go), no live run yet. Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
 
 ## Layout
 - `RULES.md` — the shared rulebook every skill reads: workspace, the Plate format, approval gates, evidence labels, brain-state sizing, the graveyard. Change rules here, not in seven places.
@@ -20,5 +20,5 @@ A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (name
 - Never invent a deadline, a sender, a commitment, or a calendar event. Everything in a Plate is EVIDENCE (quoted), INFERENCE (reasoned, stated), or ASSUMED (a guess the human can correct).
 - No medical or diagnostic claims anywhere. Brain states are a way to size a day, not treatment.
 - After any change run `python3 scripts/check_plugin.py && claude plugin validate .` and the three lint commands in README "Verify".
-- Publishing, pushing to a public repo, submitting to a marketplace, or listing for sale is an outward action: needs Amanda's explicit go.
+- Publishing, pushing to a public repo, submitting to a marketplace, or listing for sale is an outward action: needs the owner's explicit go.
 - README, DUET.md pitch copy, and launch posts are Inspired Spitfire territory: load `she-rebels-brand-kit` before editing them. Public author name is "Inspired Spitfire", never a legal name.
