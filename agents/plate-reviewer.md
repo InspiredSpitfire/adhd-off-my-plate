@@ -12,7 +12,7 @@ Do not ask the author why a choice was made and do not accept their account of w
 
 ## Method
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/RULES.md`, then `plate/config.md`, `plate/projects.md`, `plate/graveyard.md`, `plate/waiting-on.md`, and the last two files in `plate/history/`.
+1. Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` (if the variable is unset, the plugin root is the directory above `agents/`), then `plate/config.md`, `plate/projects.md`, `plate/graveyard.md`, `plate/waiting-on.md`, and the last two files in `plate/history/`.
 2. **Lint.** Run and quote the result:
    ```
    python3 "${CLAUDE_PLUGIN_ROOT}/scripts/plate_lint.py" <plate path>

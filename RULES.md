@@ -81,7 +81,7 @@ The Plate is delivered the moment the lint passes, labeled `UNREVIEWED` if the r
 
 ## 4. Approval gates
 
-This plugin reads, sorts, drafts, and recommends. It does not act in the world. The gate tags exist so a proactive runtime (Claude Duet, a scheduled Claude Code run, a Cowork session the human walked away from) can do the AUTO and DRAFT work alone and stop at every NEEDS YOUR GO. AUTO and DRAFT work starts as soon as the Plate is presented; it needs no approval, that is what the gates mean. NEEDS YOUR GO items wait for the human's explicit word, item by item.
+This plugin reads, sorts, drafts, and recommends. It does not act in the world. The gate tags exist so a proactive runtime (Claude Duet, a scheduled Claude Code run, a Cowork session the human walked away from) can do the AUTO and DRAFT work alone and stop at every NEEDS YOUR GO. AUTO and DRAFT work starts as soon as the Plate is presented; it needs no approval, that is what the gates mean. NEEDS YOUR GO items wait for the human's explicit word, item by item. On a yes, the plugin still does not act: it hands over the final text and the exact place to paste or click (the connector's send, the billing page, the RSVP). The human's hands do the outward thing. A runtime that can act on the human's behalf after approval (Claude Duet's own approval step, say) may, but that is the runtime's rule, not this plugin's.
 
 Where a DRAFT lands: the connector's drafts tool if there is one, otherwise `plate/drafts/<slug>.md`. Both are DRAFT. If a connector offers only a send path (calendar invites with attendees, most chat tools), the item is NEEDS YOUR GO and the full text goes into `plate.md` for the human to paste.
 

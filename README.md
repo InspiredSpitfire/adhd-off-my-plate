@@ -1,6 +1,6 @@
 # ADHD: Off My Plate?
 
-A chief of staff for one ADHD brain, built as a Claude Code plugin and designed to run as a proactive morning routine in Claude Duet.
+A chief of staff for one ADHD brain, built as a Claude Code plugin and written to be ready for a proactive morning routine in Claude Duet (whether Duet runs plugin skills is unconfirmed; see DUET.md).
 
 Here's the thing about every productivity tool you've ever rage-quit. You hand it forty tasks. It hands you forty tasks back, now with colors. That is not help. That is a mirror with a subscription fee.
 
@@ -28,7 +28,7 @@ A chief of staff does the opposite. You dump everything on the desk, and they ha
 | **Revive one** | One unfinished project, why it stalled, one tiny step that un-sticks it |
 | **What you're missing** | Commitments with no task, deadlines with no slot, people waiting, money on the table, the dog |
 
-Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO. Nothing gets sent, paid, booked, cancelled, or deleted without your word.
+Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands you the final text and tells you exactly where to click. The plugin itself never sends, pays, books, cancels, or deletes; those are your hands, every time.
 
 ## Why it isn't a prompt
 
@@ -57,9 +57,9 @@ Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO. Nothing g
 
 Commands: `/plate`, `/morning`, `/let-go`, `/revive`, `/missing`.
 
-## Built for Claude Duet
+## Written for Claude Duet
 
-Duet is a proactive agent that runs on its own cloud machine, checks your connected apps every few hours, sends a morning brief, and asks before it sends, pays, or deletes (per launch coverage, sources in DUET.md). That is exactly the shape of `morning-plate`. See [DUET.md](DUET.md) for the mapping, with every Duet fact labeled by source, and for the parts Duet can't do yet.
+Duet is a proactive agent that runs on its own cloud machine, checks your connected apps every few hours, sends a morning brief, and asks before it sends, pays, or deletes (per launch coverage, sources in DUET.md). That is exactly the shape of `morning-plate`. Whether Duet can run a plugin skill inside a routine is not confirmed by anything published; the routine prompt is written so it works pasted as plain instructions either way. See [DUET.md](DUET.md) for the mapping, with every Duet fact labeled by source, and for the parts Duet can't do yet.
 
 ## Install
 
