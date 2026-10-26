@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.1.0 (2026-10-22). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). Not yet run on a live inbox or calendar. Not published.
+> Status: v0.1.1 (2026-10-26). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; directory submission pending.
 
 ## What you hand it
 
@@ -63,6 +63,14 @@ Duet is a proactive agent that runs on its own cloud machine, checks your connec
 
 ## Install
 
+One step, inside Claude Code:
+
+```
+/plugin install adhd-off-my-plate --marketplace InspiredSpitfire/adhd-off-my-plate
+```
+
+Or from a terminal:
+
 ```bash
 claude plugin marketplace add InspiredSpitfire/adhd-off-my-plate
 claude plugin install adhd-off-my-plate
@@ -73,7 +81,7 @@ Then `/plate` and paste your dump. First run copies `templates/` to `./plate/` a
 ## Verify
 
 ```bash
-python3 scripts/check_plugin.py && claude plugin validate .
+python3 scripts/check_plugin.py && claude plugin validate . --strict --profile directory
 python3 scripts/plate_lint.py examples/sample-plate.md        # PASS
 python3 scripts/plate_lint.py examples/sample-plate-bad.md    # FAIL, 13 planted defects
 ```
