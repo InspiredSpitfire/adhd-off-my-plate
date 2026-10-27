@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Off My Plate: run ~/plate/morning.sh at 06:30 on weekdays.
+  launchd, unlike cron, runs a missed job when the Mac wakes up.
+  Replace YOUR-USERNAME, copy to ~/Library/LaunchAgents/, then:
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.offmyplate.morning.plist
+  To stop it:
+    launchctl bootout gui/$(id -u)/com.offmyplate.morning
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.offmyplate.morning</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>/Users/YOUR-USERNAME/plate/morning.sh</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>30</integer></dict>
+  </array>
+  <!-- Optional: a workspace other than ~/plate.
+  <key>EnvironmentVariables</key>
+  <dict><key>OFF_MY_PLATE_DIR</key><string>/Users/YOUR-USERNAME/somewhere/plate</string></dict>
+  -->
+  <key>StandardErrorPath</key><string>/tmp/offmyplate-morning.err</string>
+</dict>
+</plist>

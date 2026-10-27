@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.1.1 (2026-10-26). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; directory submission pending.
+> Status: v0.2.0 (2026-10-27). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; directory submission pending.
 
 ## What you hand it
 
@@ -53,9 +53,9 @@ Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands 
 | `let-it-go` | The drop audit. Three questions per item. Graveyard with revive-by dates. Decline text drafted. |
 | `revive-one` | One stalled project, one-clause diagnosis, one ten-minute step that addresses the reason it stalled. |
 | `whats-missing` | Eight cross-checks for what fell through the cracks, each hit with its source. |
-| `morning-plate` | The unattended version. No questions, assumptions labeled, AUTO and DRAFT done, NEEDS YOUR GO collected at the top of a phone-sized brief. |
+| `morning-plate` | The unattended version. No questions, assumptions labeled, AUTO and DRAFT done, NEEDS YOUR GO collected at the top of a phone-sized brief. Cuts anything it already told you twice (`scripts/surfaced.py`). |
 
-Commands: `/plate`, `/morning`, `/let-go`, `/revive`, `/missing`.
+Commands: `/setup`, `/plate`, `/morning`, `/due`, `/let-go`, `/revive`, `/missing`.
 
 ## Written for Claude Duet
 
@@ -76,7 +76,52 @@ claude plugin marketplace add InspiredSpitfire/adhd-off-my-plate
 claude plugin install adhd-off-my-plate
 ```
 
-Then `/plate` and paste your dump. First run copies `templates/` to `./plate/` and asks the three setup questions that matter.
+Then `/setup`. It makes your workspace at `~/plate`, never inside whatever project folder you happen to be standing in, keeps it out of git, and asks the three questions that size every Plate. Skip any of them and it guesses, out loud.
+
+## Try it in 2 minutes
+
+No inbox, no calendar, no commitment. Just watch it take a mess and hand back less.
+
+1. `/setup` and say "skip" to all three questions.
+2. `/plate foggy`, then paste the fake brain dump from [examples/sample-brain-dump.md](examples/sample-brain-dump.md). It's a stranger's Tuesday: an unsent invoice, a dentist who won't stop texting, a course page stuck at 80% for two months, a dog who needs flea meds.
+3. You get one Plate back. Compare it to [examples/sample-plate.md](examples/sample-plate.md): two Keeps (Foggy gets two), one next step under ten minutes, the website rebuild in the graveyard with a revival date, the course page revived with one eight-minute text.
+4. `/due` runs `scripts/due.py` on your workspace: overdue nudges, graveyard items due back, deadlines. Empty on day one. That's the point.
+
+When it lands, swap the fake dump for your real one and connect mail and calendar.
+
+## Schedule it
+
+`morning-plate` is built to run with nobody watching: no questions, assumptions labeled, AUTO and DRAFT work done, every NEEDS YOUR GO collected at the top of a phone-sized brief. Three ways to run it, most tested first.
+
+**1. On your own machine.** Tested 2026-10-27 with Claude Code 2.1.310; see "What the test showed" below.
+
+Copy [examples/morning.sh](examples/morning.sh) to `~/plate/morning.sh`. It finds the installed plugin, then runs, in effect:
+
+```bash
+claude -p "/adhd-off-my-plate:morning $HOME/plate" --permission-mode dontAsk --allowedTools "Read(/$HOME/plate/**)" "Read(/$PLUGIN/**)" "Edit(/$HOME/plate/**)" "Skill" "Agent" "Bash(python3 $PLUGIN/scripts/plate_lint.py:*)" "Bash(python3 $PLUGIN/scripts/due.py:*)" "Bash(python3 $PLUGIN/scripts/surfaced.py:*)" "mcp__claude_ai_Gmail__search_threads" "mcp__claude_ai_Gmail__get_thread" "mcp__claude_ai_Google_Calendar__list_calendars" "mcp__claude_ai_Google_Calendar__list_events" < /dev/null
+```
+
+The safety is in `dontAsk`: anything not on that list is denied, not asked about. No send, delete, RSVP, or pay tool is on it. Reads stay inside your workspace and the plugin; writes stay inside your workspace (`Edit(...)` covers writes; a `Write(...)` rule does nothing). The only commands it can run are the plugin's three read-and-report scripts, by exact path. A `python3 -c` one-liner, a quoted path, or a script call with a second command chained on is denied.
+
+Four things we learned the hard way running it headless, so you don't have to:
+- **Name the workspace in the prompt.** An unattended run has no shell to read environment variables, so without the path it goes looking for one.
+- **No `$VARIABLES` and no quotes in script commands.** `dontAsk` denies both. The rulebook tells the skills to write literal, unquoted paths.
+- **`< /dev/null`**, or `claude -p` waits for input that never comes.
+- **Your own hooks still run.** If you gate MCP tools with a PreToolUse hook, headless runs name your connectors `mcp__claude_ai_Gmail__*` and `mcp__claude_ai_Google_Calendar__*`, which can differ from the names the desktop app uses. Allow the read tools under those names too, or the brief says mail and calendar were unreachable.
+
+What the test showed: a full run of `morning.sh` against a fictional test workspace exited cleanly, wrote only inside that workspace, produced a lint-clean Plate and a phone-sized brief, and `surfaced.py` found no repeats on the new Plate. Each fence above was tested on its own. On the test machine its own MCP-gating hook blocked the connector reads, so the mail and calendar path is verified up to the permission layer, not against a live inbox.
+
+Then schedule the script. On a Mac, use launchd, because it runs a missed job when the laptop wakes up and cron just shrugs: edit and load [examples/com.offmyplate.morning.plist](examples/com.offmyplate.morning.plist) (instructions inside). On Linux, cron:
+
+```bash
+30 6 * * 1-5 /bin/sh "$HOME/plate/morning.sh"
+```
+
+The brief lands in `~/plate/notes/brief-YYYY-MM-DD.md`.
+
+**2. A Claude Code routine in the cloud.** Not tested. A cloud routine cannot read `~/plate` on your machine, so the workspace has to live somewhere it can reach, the same constraint as Claude Duet.
+
+**3. Claude Duet.** Not tested; Duet is a waitlisted preview. Paste the routine prompt from the `morning-plate` skill ("Setting up the routine") and name a connected-drive folder as the workspace. See [DUET.md](DUET.md).
 
 ## Verify
 
@@ -84,6 +129,7 @@ Then `/plate` and paste your dump. First run copies `templates/` to `./plate/` a
 python3 scripts/check_plugin.py && claude plugin validate . --strict --profile directory
 python3 scripts/plate_lint.py examples/sample-plate.md        # PASS
 python3 scripts/plate_lint.py examples/sample-plate-bad.md    # FAIL, 13 planted defects
+python3 scripts/selftest.py                                   # due.py, surfaced.py, init_workspace.py: all checks PASS
 ```
 
 ## What it will not do

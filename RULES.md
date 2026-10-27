@@ -21,14 +21,26 @@ plate/
   parking-lot.md   ideas that arrived mid-task; one line each, no action
   drafts/          DRAFT-gated text when no connector drafts folder exists: one file per draft
   notes/           AUTO outputs: summaries, lookups, pulled threads
-  history/         plate-YYYY-MM-DD.md, one per run (empty on the first run; skip the copy)
+  history/         plate-YYYY-MM-DD-HHMM.md, one per run, so two runs on one day never overwrite (empty on the first run)
 ```
 
-Find it in this order: `./plate/` in the current directory, then `~/plate/`, then the location named in the user's instructions (in Claude Duet this is a folder in a connected drive, since Duet cannot read local files). If none exists, say so, copy `templates/` to create it, and ask the three ★ questions in `config.md` before anything else. Blank templates live in the plugin's `templates/` folder (`../../templates/` from any skill directory).
+Find it in this order: a location the user or the routine prompt names (it wins over everything, including a `config.md` inside some other folder), then `$OFF_MY_PLATE_DIR`, then `./plate/` if it already exists, then `~/plate/`. In Claude Duet the workspace is a folder in a connected drive, since Duet cannot read local files; the routine prompt names it. If none exists, say so and run `/setup` (`scripts/init_workspace.py`), which creates it at `~/plate`, never in the current project folder, and keeps it out of git. Every `plate/` path in a skill means this workspace, wherever it lives.
 
 Never ask for something the workspace already answers. Ask at most 3 questions per run, all in one message, ranked by how much the answer changes the Plate. If the human is away, proceed on labeled assumptions. Never silently overwrite a workspace file other than `plate.md`: append, or show the change first. Template tables ship one blank row (`PR-01`, `G-01`, `W-01`, `L-01`): fill that row first, then append.
 
-Plugin paths: skills refer to the plugin root as `${CLAUDE_PLUGIN_ROOT}`. If that variable is unset in the runtime, the plugin root is the directory two levels above any skill's `SKILL.md`. If the runtime has no shell at all (some proactive runtimes), the scripts cannot run: say so and label the Plate `UNLINTED`.
+## 2b. The scripts
+
+The model does not eyeball what a script can count. Run these and cite their output:
+
+| Script | What it decides | Who runs it |
+|---|---|---|
+| `scripts/plate_lint.py <plate>` | the Plate's structure: one next step, gates, Keep limits, revive-by, evidence labels | `plate-triage`, `morning-plate`, `plate-reviewer` |
+| `scripts/due.py [workspace] --within N` | which nudge-by, revive-by, and deadline dates are overdue, today, or inside N days | `whats-missing` (checks 2, 4, 5), `morning-plate`, `/due` |
+| `scripts/surfaced.py [workspace] --candidate <plate>` | which Missing and Let-go bullets the last 7 Plates already said; exit 1 means repeats | `morning-plate`, `plate-reviewer` |
+| `scripts/surfaced.py [workspace] --threshold 3` | the avoided thing: what has sat on 3+ Plates | `whats-missing` check 8 |
+| `scripts/init_workspace.py [path]` | creates the workspace safely, never overwrites | `/setup` |
+
+Plugin paths: skills refer to the plugin root as `${CLAUDE_PLUGIN_ROOT}`. If that variable is unset in the runtime, the plugin root is the directory two levels above any skill's `SKILL.md` (the skill's base directory is shown when it loads). **Before running any script, write the plugin root and the workspace as literal absolute paths, unquoted, one command per call:** `python3 /Users/you/.claude/plugins/cache/adhd-off-my-plate/adhd-off-my-plate/0.2.0/scripts/due.py /Users/you/plate --within 2`. The unattended recipe allows the three scripts by exact path, and `dontAsk` denies anything else: a shell variable (`${CLAUDE_PLUGIN_ROOT}`, `$HOME`), a quoted path, a chained second command, or a `python3 -c` one-liner. Tested 2026-10-27. If the runtime has no shell at all (some proactive runtimes), the scripts cannot run: say so and label the Plate `UNLINTED`.
 
 ## 3. The Plate
 

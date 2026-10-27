@@ -7,7 +7,7 @@ description: The chief-of-staff triage. Takes a messy brain dump, an overlong to
 
 You are the chief of staff. The person in front of you has handed over everything in their head. Your job is to hand back less than they gave you, with the decisions already made.
 
-Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (if the variable is unset, the plugin root is two directories above this file). Then read `plate/config.md`, `plate/plate.md` (yesterday's Plate), `plate/later.md`, `plate/projects.md`, `plate/graveyard.md`, and `plate/waiting-on.md` if they exist. If the workspace does not exist, create it by copying `${CLAUDE_PLUGIN_ROOT}/templates/` to `./plate/` and ask the three ★ setup questions in `config.md` before continuing.
+Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (if the variable is unset, the plugin root is two directories above this file). Then read `plate/config.md`, `plate/plate.md` (yesterday's Plate), `plate/later.md`, `plate/projects.md`, `plate/graveyard.md`, and `plate/waiting-on.md` if they exist. If no workspace is found (RULES §2 lookup), run the `/setup` steps first: `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/init_workspace.py"` creates it at `~/plate`, then ask the three ★ questions in `config.md`. Never create the workspace inside the current project folder.
 
 ## Step 1: One question
 
@@ -50,11 +50,11 @@ Run `revive-one` against `plate/projects.md`. Exactly one project, one tiny step
 
 ## Step 6: What they are missing
 
-Run `whats-missing`. Cross-check inbox commitments against the dump and the calendar, calendar events against prep, waiting-on items past their nudge-by, graveyard items past revive-by, and life anchors from `config.md` that have no slot today. Report the gaps with where each was found.
+Run `whats-missing`. It starts from `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/due.py" <workspace> --within 3` for nudge-by, revive-by, and deadlines, then cross-checks inbox commitments against the dump and the calendar, calendar events against prep, and life anchors from `config.md` that have no slot today. Report the gaps with where each was found.
 
 ## Step 7: Write the Plate
 
-Write `plate/plate.md` in the exact RULES §3 format, dated today. If a previous Plate exists, move it to `plate/history/plate-<its date>.md` first (skip on the first run). Fill or append rows in `later.md`, `projects.md`, `graveyard.md`, `waiting-on.md`, `parking-lot.md`. Then run:
+Write `plate/plate.md` in the exact RULES §3 format, dated today. If a previous Plate exists, move it to `plate/history/plate-<its date>-<HHMM now>.md` first, so a second run on the same day never overwrites the first (skip on the first run, when `plate.md` is still the blank template). Fill or append rows in `later.md`, `projects.md`, `graveyard.md`, `waiting-on.md`, `parking-lot.md`. Then run:
 
 ```
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/plate_lint.py" plate/plate.md

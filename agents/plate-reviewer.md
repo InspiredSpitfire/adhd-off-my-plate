@@ -23,7 +23,7 @@ Do not ask the author why a choice was made and do not accept their account of w
 5. **Capacity.** Add up the Keeps against the real-hours figure in the Keep heading (or the calendar report, or config). Keeps that need more time than exists is a defect. Keep count over the state's limit (Feral 3, Froggy 3, Foggy 2, Fried 1) is a defect.
 6. **One next step.** One line, one action, a time box of ten minutes or less (five on Fried; `(0 min)` for nothing-on-purpose), no "or". Judge whether it is actually physical and actually first; the lint cannot tell "text the dentist and grab the slip" from one action, you can.
 7. **Coverage.** Walk the inbox ledger's "I owe them" rows and the calendar's "needs prep" rows. Each must land in Keep, Off my plate, Let go, or What you're missing. One that landed nowhere is a defect.
-8. **Dedupe (morning-plate only).** A gap or Let-go item surfaced in the last two history Plates and re-surfaced without a new reason is a MINOR defect.
+8. **Dedupe.** Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/surfaced.py" <workspace> --candidate <plate path>` and quote it. On a `morning-plate` run, a REPEAT kept without a deadline inside 48 hours or a stated change is a MAJOR defect; on an attended `plate-triage` run it is MINOR.
 9. **Tone.** Any guilt, lecture, "consistency", "just", medical or diagnostic language is a defect. Quote it.
 10. **Revive.** Exactly one project, one step of ten minutes or less, the step addresses the stall reason, revival count respected. On Fried the section is exactly `Revive: not today, on purpose.` and that is correct, not a defect.
 
