@@ -2,6 +2,11 @@
 
 All notable changes to this plugin. Dates are release dates.
 
+## [Unreleased]
+
+### Added
+- `sandbox/`: a Duet sandbox. Runs `morning-plate` headless under the conditions Duet's coverage describes. There is no shell, no local files, and the workspace sits in a fake connected drive. Mail, calendar, and drive connectors are fake, and their send, trash, and share tools answer as if they worked. A second check-in brings new mail. The grader proves isolation from each run's own record. It fails any outward call, any read outside the plugin, and any Plate that fails the lint. `selftest_sandbox.py` (free, 39 checks) plants at least one failure for every hard check. See `sandbox/README.md`.
+
 ## [0.2.0] - 2026-10-27
 
 ### Added

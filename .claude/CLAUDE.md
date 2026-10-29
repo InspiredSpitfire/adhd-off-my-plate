@@ -11,6 +11,7 @@ A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (name
 - `examples/` — a sample brain dump, a passing Plate, a Plate with planted defects (the lint must keep catching them), `workspace/` (the fixture the script self-test pins), and the scheduling examples `morning.sh` and the launchd plist.
 - `scripts/check_plugin.py` — component reachability check. `scripts/plate_lint.py` — structural check of a Plate. `due.py`, `surfaced.py`, `init_workspace.py` (shared helper `_ws.py`) — see RULES §2b; `selftest.py` pins them.
 - `DUET.md` — how this runs inside Claude Duet, with every Duet fact labeled by source.
+- `sandbox/` — the Duet sandbox: fake mail, calendar, and drive connectors, a headless runner, and a grader. `python3 sandbox/selftest_sandbox.py` is free; `python3 sandbox/duet_sandbox.py` spends real usage. Runs get a plugin copy without `sandbox/` so fixtures and the answer key stay unreadable.
 
 ## Rules
 - The Plate has exactly one next step. Not a menu. The lint enforces it; do not soften the lint.

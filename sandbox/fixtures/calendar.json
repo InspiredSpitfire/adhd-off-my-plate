@@ -1,0 +1,13 @@
+{
+  "_about": "Fictional calendar for the Duet sandbox. day = days after the first check-in's date; times are local. gone_at_tick removes an event from that check-in on (it was moved).",
+  "events": [
+    {"id": "ev-priya-call", "tick": 1, "day": 0, "start": "10:00", "end": "11:00", "title": "Client call: Priya (Lumen Studio)", "attendees": ["priya@lumen-studio.example"]},
+    {"id": "ev-house-sync", "tick": 1, "day": 0, "start": "16:00", "end": "17:00", "title": "House planning sync"},
+    {"id": "ev-dentist", "tick": 1, "day": 1, "start": "09:00", "end": "10:00", "title": "Dentist cleaning", "location": "BrightSmile Dental"},
+    {"id": "ev-guest-rec", "tick": 1, "day": 1, "start": "14:00", "end": "15:00", "title": "Guest recording: Ep. 12"},
+    {"id": "ev-northwind-sync", "tick": 1, "gone_at_tick": 2, "day": 1, "start": "14:30", "end": "15:30", "title": "Northwind sync", "attendees": ["accounts@northwind-agency.example"]},
+    {"id": "ev-northwind-sync-2", "tick": 2, "day": 1, "start": "16:00", "end": "16:30", "title": "Northwind sync (moved)", "attendees": ["accounts@northwind-agency.example"]},
+    {"id": "ev-vb-pickup", "tick": 1, "day": 1, "start": "17:00", "end": "17:15", "title": "Volleyball pickup", "calendar": "family"},
+    {"id": "ev-workshop-prep", "tick": 1, "day": 2, "start": "10:00", "end": "12:00", "title": "Workshop prep block"}
+  ]
+}
