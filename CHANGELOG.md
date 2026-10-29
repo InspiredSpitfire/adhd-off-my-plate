@@ -10,6 +10,7 @@ All notable changes to this plugin. Dates are release dates.
 
 ### Changed
 - Directory submission pass: the manifest drops the explicit `icon` field (the directory auto-detects the PNG in the manifest folder), prose stops naming the icon path, the marketplace entry counts seven commands, every command's `argument-hint` is quoted (the directory's YAML parser rejected `/plate`'s two bracketed groups), the README gains a Privacy section, and `plugin.json` sets `displayName` ("ADHD: Off My Plate?") plus documentation, support, and privacy links for the listing.
+- New listing icon: a neon-ice plate in a hot pink rim, with purple dots leaving the middle and flying off over the edge. Things coming off the plate, which is the whole product.
 
 ### Fixed
 - With no shell, unattended runs shipped Plates with unlabeled dates (2 of 4 Duet sandbox check-ins). After §3a and two wording fixes (DRAFT items name their contents by topic, never by an action word; the brief's first line is always the state line), 4 of 4 check-ins passed every hard check.

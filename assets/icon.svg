@@ -1,21 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
     <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="26"/></filter>
-    <filter id="softglow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="14"/></filter>
   </defs>
-  <!-- champagne base, same radius as the sibling plugin -->
   <rect width="1024" height="1024" rx="224" fill="#f5eed1"/>
-  <!-- the plate: hot pink rim with glow -->
+  <!-- the plate -->
   <circle cx="512" cy="512" r="330" fill="#ff0073" opacity="0.5" filter="url(#glow)"/>
   <circle cx="512" cy="512" r="330" fill="#ff0073"/>
-  <circle cx="512" cy="512" r="262" fill="#f5eed1"/>
-  <!-- a thin blue inner ring: the AI line -->
+  <circle cx="512" cy="512" r="262" fill="#00ffda"/>
   <circle cx="512" cy="512" r="236" fill="none" stroke="#002dff" stroke-width="10"/>
-  <!-- the one thing left on the plate: a neon-ice dot with glow -->
-  <circle cx="512" cy="512" r="78" fill="#00ffda" opacity="0.7" filter="url(#softglow)"/>
-  <circle cx="512" cy="512" r="66" fill="#00ffda"/>
-  <!-- three things that came off: fading purple dots leaving the rim, bottom right -->
-  <circle cx="846" cy="846" r="34" fill="#7129ff" opacity="0.9"/>
-  <circle cx="922" cy="776" r="22" fill="#7129ff" opacity="0.55"/>
-  <circle cx="962" cy="880" r="14" fill="#7129ff" opacity="0.3"/>
+  <!-- what's coming off: from the middle, over the rim, and gone -->
+  <circle cx="512" cy="512" r="60" fill="#7129ff" opacity="1"/>
+  <circle cx="574" cy="351" r="46" fill="#7129ff" opacity="1"/>
+  <circle cx="657" cy="243" r="36" fill="#7129ff" opacity="1"/>
+  <circle cx="760" cy="178" r="26" fill="#7129ff" opacity="0.6"/>
+  <circle cx="885" cy="150" r="17" fill="#7129ff" opacity="0.35"/>
 </svg>
