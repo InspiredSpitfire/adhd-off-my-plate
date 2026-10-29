@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.2.0 (2026-10-27). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; directory submission pending.
+> Status: v0.2.1 (2026-10-29). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; directory submission pending.
 
 ## What you hand it
 
@@ -160,6 +160,14 @@ python3 scripts/selftest.py                                   # due.py, surfaced
 python3 sandbox/selftest_sandbox.py                           # Duet sandbox connectors + grader, free, all checks PASS
 python3 sandbox/duet_sandbox.py                               # the Duet sandbox itself: real Opus runs, uses your usage
 ```
+
+## Privacy
+
+What it reads: what you paste into a Claude Code session, the plugin's own files, your workspace (`~/plate` unless you name another folder, including its history, notes, and drafts), any other folder or repo you point it at, and, only if you have connected them in Claude yourself, your mail and calendar through your own connectors. It reads mail and calendar; it never sends, replies, RSVPs, trashes, or deletes. Reply and decline drafts go into your mail connector's drafts folder or your workspace, and you send them.
+
+What it stores: the Plate, its history, notes, drafts, and tables, as plain Markdown in your workspace on your own disk (or the connected-drive folder you name for Claude Duet). Setup adds the workspace path to the `.gitignore` of a git repo that contains the workspace. The optional scheduler example logs errors to `/tmp`, and the optional sandbox writes its runs to your temp folder. Nothing else.
+
+What leaves your machine: only what Claude itself processes under your Claude account, and the drafts your connectors save in your own accounts. Nothing goes to the plugin's author. No telemetry, no analytics, no accounts. None of its scripts open a network connection; the optional morning script and sandbox start `claude` on your own login.
 
 ## What it will not do
 

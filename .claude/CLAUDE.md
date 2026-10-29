@@ -1,6 +1,6 @@
 # ADHD: Off My Plate? (Claude Code plugin)
 
-A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (named by Inspired Spitfire 2026-10-22). Slug: `adhd-off-my-plate`. Status: v0.2.0 (2026-10-27). Public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go). First live run on the owner's real inbox and calendar 2026-10-22, reviewed to PASS. Directory submission pending. Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
+A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (named by Inspired Spitfire 2026-10-22). Slug: `adhd-off-my-plate`. Status: v0.2.1 (2026-10-29). Public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go). First live run on the owner's real inbox and calendar 2026-10-22, reviewed to PASS. Directory submission pending. Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
 
 ## Layout
 - `RULES.md` — the shared rulebook every skill reads: workspace, the Plate format, approval gates, evidence labels, brain-state sizing, the graveyard. Change rules here, not in seven places.
@@ -22,5 +22,5 @@ A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (name
 - No medical or diagnostic claims anywhere. Brain states are a way to size a day, not treatment.
 - After any change run `python3 scripts/check_plugin.py && claude plugin validate . --strict --profile directory` and the commands in README "Verify" (two lint runs and `selftest.py`).
 - Publishing, pushing to a public repo, submitting to a marketplace, or listing for sale is an outward action: needs the owner's explicit go.
-- Rules live in `.claude/CLAUDE.md` (plugin validator warns on a root CLAUDE.md); `AGENTS.md` symlinks to it. The listing icon is `.claude-plugin/icon.png`, rendered from `assets/icon.svg` with `qlmanage -t -s 1024 -o .claude-plugin assets/icon.svg` (rename the output); the directory keeps the first submitted icon permanently.
+- Rules live in `.claude/CLAUDE.md` (plugin validator warns on a root CLAUDE.md); `AGENTS.md` symlinks to it. The listing icon is the PNG in the manifest folder, auto-detected by the directory (no `icon` field: a manifest or prose naming the image path triggers a directory policy hold); its editable source is the SVG in `assets/` (render with QuickLook: `qlmanage -t -s 1024`, rename the output). The directory keeps the first submitted icon permanently.
 - README, DUET.md pitch copy, and launch posts are Inspired Spitfire territory: load `she-rebels-brand-kit` before editing them. Public author name is "Inspired Spitfire", never a legal name.

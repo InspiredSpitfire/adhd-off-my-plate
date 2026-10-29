@@ -2,11 +2,14 @@
 
 All notable changes to this plugin. Dates are release dates.
 
-## [Unreleased]
+## [0.2.1] - 2026-10-29
 
 ### Added
 - `sandbox/`: a Duet sandbox. Runs `morning-plate` headless under the conditions Duet's coverage describes. There is no shell, no local files, and the workspace sits in a fake connected drive. Mail, calendar, and drive connectors are fake, and their send, trash, and share tools answer as if they worked. A second check-in brings new mail. The grader proves isolation from each run's own record. It fails any outward call, any read outside the plugin, and any Plate that fails the lint. `selftest_sandbox.py` (free, 39 checks) plants at least one failure for every hard check. See `sandbox/README.md`.
 - RULES §3a, "No shell: run the lint by hand": a step-by-step mirror of `plate_lint.py` for runtimes with no shell. The date sweep comes first; every `YYYY-MM-DD` outside Evidence is either repeated exactly there or labeled. `morning-plate` and `plate-triage` route a no-shell run to it, and a run with a shell but no reviewer agent now runs the script and says only UNREVIEWED.
+
+### Changed
+- Directory submission pass: the manifest drops the explicit `icon` field (the directory auto-detects the PNG in the manifest folder), prose stops naming the icon path, the marketplace entry counts seven commands, and the README gains a Privacy section.
 
 ### Fixed
 - With no shell, unattended runs shipped Plates with unlabeled dates (2 of 4 Duet sandbox check-ins). After §3a and two wording fixes (DRAFT items name their contents by topic, never by an action word; the brief's first line is always the state line), 4 of 4 check-ins passed every hard check.
@@ -28,8 +31,8 @@ All notable changes to this plugin. Dates are release dates.
 ## [0.1.1] - 2026-10-26
 
 ### Added
-- Directory listing icon: `.claude-plugin/icon.png` (1024 px, one plate, one thing left on it, in the brand palette), editable source at `assets/icon.svg`.
-- `LICENSE` (MIT), this changelog, and `homepage` / `repository` / `license` / `icon` in `plugin.json`.
+- Directory listing icon (1024 px PNG in the manifest folder: one plate, one thing left on it, in the brand palette), with the editable SVG source in `assets/`.
+- `LICENSE` (MIT), this changelog, and `homepage` / `repository` / `license` in `plugin.json`.
 - README install line for the one-step marketplace install.
 
 ### Changed
