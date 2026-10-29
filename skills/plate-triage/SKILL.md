@@ -60,7 +60,7 @@ Write `plate/plate.md` in the exact RULES §3 format, dated today. If a previous
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/plate_lint.py" plate/plate.md
 ```
 
-A FAIL means the Plate is not finished. Fix it and run again. Then hand the Plate to the `plate-reviewer` agent for an independent verdict before presenting it. If no such agent is available in this runtime, or there is no shell to run the lint, present the Plate anyway with `UNREVIEWED` (or `UNLINTED`) as its last line and say why. A labeled Plate beats a late one; an unlabeled one is a lie.
+A FAIL means the Plate is not finished. Fix it and run again. Then hand the Plate to the `plate-reviewer` agent for an independent verdict before presenting it. If no such agent is available in this runtime, present the Plate anyway with `UNREVIEWED` as its last line and say why. If there is no shell to run the lint, run RULES §3a by hand on `plate.md` before presenting it (the date sweep, then the rest), fix what it finds in place, and present the Plate labeled `UNLINTED`. A labeled Plate beats a late one; an unlabeled one is a lie.
 
 ## Step 8: Hand it over
 

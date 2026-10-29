@@ -77,6 +77,17 @@ It grades every run. Two Duet-profile runs on Opus (2026-10-28, four check-ins i
 
 The local scheduled-run profile, which can lint itself, passed clean.
 
+**Then we fixed the gap and ran it again.** RULES §3a now spells out the lint as a by-hand checklist for runtimes with no shell, with the date sweep first. It took three rounds of runs to get the wording right:
+
+| Wording | Check-ins | Lint passed | What still slipped |
+|---|---|---|---|
+| Before the fix | 4 | 2 | two unlabeled dates |
+| First draft | 4 | 1 | no dates; three draft items described an action ("a request to move the sync"), and one brief opened with a preamble |
+| Final checklist | 4 | 4 | two briefs opened with a preamble instead of the state line |
+| Final, with the draft and first-line rules | 4 | 4 | nothing: every hard check passed, zero warnings |
+
+Four clean check-ins is evidence, not proof. Run `python3 sandbox/duet_sandbox.py` to add your own.
+
 ## Install
 
 One step, inside Claude Code:

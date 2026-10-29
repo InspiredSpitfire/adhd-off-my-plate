@@ -40,7 +40,7 @@ The model does not eyeball what a script can count. Run these and cite their out
 | `scripts/surfaced.py [workspace] --threshold 3` | the avoided thing: what has sat on 3+ Plates | `whats-missing` check 8 |
 | `scripts/init_workspace.py [path]` | creates the workspace safely, never overwrites | `/setup` |
 
-Plugin paths: skills refer to the plugin root as `${CLAUDE_PLUGIN_ROOT}`. If that variable is unset in the runtime, the plugin root is the directory two levels above any skill's `SKILL.md` (the skill's base directory is shown when it loads). **Before running any script, write the plugin root and the workspace as literal absolute paths, unquoted, one command per call:** `python3 /Users/you/.claude/plugins/cache/adhd-off-my-plate/adhd-off-my-plate/0.2.0/scripts/due.py /Users/you/plate --within 2`. The unattended recipe allows the three scripts by exact path, and `dontAsk` denies anything else: a shell variable (`${CLAUDE_PLUGIN_ROOT}`, `$HOME`), a quoted path, a chained second command, or a `python3 -c` one-liner. Tested 2026-10-27. If the runtime has no shell at all (some proactive runtimes), the scripts cannot run: say so and label the Plate `UNLINTED`.
+Plugin paths: skills refer to the plugin root as `${CLAUDE_PLUGIN_ROOT}`. If that variable is unset in the runtime, the plugin root is the directory two levels above any skill's `SKILL.md` (the skill's base directory is shown when it loads). **Before running any script, write the plugin root and the workspace as literal absolute paths, unquoted, one command per call:** `python3 /Users/you/.claude/plugins/cache/adhd-off-my-plate/adhd-off-my-plate/0.2.0/scripts/due.py /Users/you/plate --within 2`. The unattended recipe allows the three scripts by exact path, and `dontAsk` denies anything else: a shell variable (`${CLAUDE_PLUGIN_ROOT}`, `$HOME`), a quoted path, a chained second command, or a `python3 -c` one-liner. Tested 2026-10-27. If the runtime has no shell at all (some proactive runtimes), the scripts cannot run: run §3a by hand, say so, and label the Plate `UNLINTED`.
 
 ## 3. The Plate
 
@@ -86,6 +86,36 @@ Rules the lint enforces:
 - **Evidence section is present** with at least one EVIDENCE line and an ASSUMED line (or `ASSUMED: none`). Every date anywhere else on the Plate is either cited in Evidence or sits on a line labeled INFERENCE or ASSUMED.
 
 The lint's outward-verb check is a heuristic (leading verb plus execution verbs). It catches the common cases. The `plate-reviewer` agent reads every item too; the two together are the check, not the script alone.
+
+## 3a. No shell: run the lint by hand
+
+Use this only when the runtime has no shell, so `plate_lint.py` cannot run. A runtime with a shell runs the script, even if it has no reviewer agent.
+
+Check the finished Plate before it is presented. If `plate.md` is already written, fix it in place. Then label it the way your skill says: the morning brief ends `UNLINTED, UNREVIEWED: no shell in this runtime`, and a presented Plate carries `UNLINTED`. A hand check is not the script, and the label says so.
+
+**1. Date sweep, first, every time.** This is the check unattended runs fail. In the Duet sandbox (2026-10-28), two of four check-ins shipped one unlabeled date.
+- Go through Off my plate, Keep, Let go, Next step, Revive one, and What you're missing. List every `YYYY-MM-DD` you wrote. The title line and Evidence are exempt.
+- Each one needs one of three things:
+  - **Cited.** The same `YYYY-MM-DD`, character for character, appears somewhere in Evidence. "Oct 23" does not cite `2026-10-23`.
+  - **Labeled.** Its own line contains `INFERENCE` or `ASSUMED`.
+  - **A decision.** It is the date after `revive-by:` on a Let-go line.
+- Two kinds slip:
+  - **Dates you worked out**, like "the Friday after this one" or a deadline counted from an email. Add `(INFERENCE)` to that line, and put the basis in Evidence.
+  - **Dates you copied from a workspace file** (`later.md`, `waiting-on.md`, a history Plate). Add an Evidence line that names the file and the row and repeats the same `YYYY-MM-DD`: `EVIDENCE: later.md L-01 deadline 2026-10-23`.
+- Never fix a miss by deleting a date the human needs. Dates in prose ("Nov 6") follow the same rule, but the script only catches the `YYYY-MM-DD` form.
+
+**2. The rest of the lint, in order:**
+- **Title.** `# The Plate · YYYY-MM-DD · Brain: <Feral | Froggy | Foggy | Fried>`, and all seven sections present.
+- **Off my plate.** Every line is a checkbox item, `- [ ]` or `- [x]`, with `gate: AUTO`, `gate: DRAFT`, or `gate: NEEDS YOUR GO`. `- none` is allowed.
+  - A DRAFT item starts with a drafting verb (draft, write, prepare, compose, outline, put together) right after the checkbox. After that, none of these appears anywhere in the item, even to describe what the draft asks for: send, forward, move, archive, label, mark as, book, cancel, pay, order, buy, purchase, publish, transfer, ping, RSVP, submit, sign, delete, unsubscribe. An outreach verb (email, reply, ask, tell, confirm, and the rest of the AUTO list below) may not follow "and", "then", a comma, or a semicolon. Nouns are fine: "the reply", "the invoice". Name the draft's contents by topic: "Draft the W-9 reply to Dana (sync time, phishing warning)", not "with a request to move the sync". The script cannot tell describing an action from doing one, so it fails both.
+  - An AUTO item never sends, books, pays, cancels, deletes, forwards, archives, labels, moves, or marks as anything. It never contains order, buy, publish, transfer, ping, or RSVP. It never starts with an outreach verb: email, text, message, call, reply, share, post, schedule, submit, sign, remove, unsubscribe, accept, decline, invite, confirm, approve, notify, tell, ask, or nudge. All of those are NEEDS YOUR GO, and so is anything else that changes state in a connected account. "Confirm the dentist slot" is NEEDS YOUR GO.
+- **Keep.** At least one numbered item, and no more than the brain state allows: Feral 3, Froggy 3, Foggy 2, Fried 1.
+- **Let go.** Every item has `revive-by:` followed by a `YYYY-MM-DD` date or `never`. `- none` is allowed.
+- **Next step.** One line, starting with `>`. It does not start with a list marker. It ends in `(N min)`, with N at most 10 (5 on Fried). It contains none of the menu words: or, then, either, whichever, and also, alternatively, instead, otherwise, pick one, if that. It has no ` / ` and no colon followed by a comma list.
+- **Revive one.** Exactly one `**Project:**` line with `stalled because` and `revival #N`. Exactly one `**Tiny step:**` line ending in `(N min)`, N at most 10, with none of the menu words. On Fried, the section is exactly `Revive: not today, on purpose.` and nothing else.
+- **What you're missing.** Not empty.
+- **Evidence.** It has an `EVIDENCE:` line and an `ASSUMED:` line (`ASSUMED: none` is fine).
+- **Tone.** No banned phrase outside Evidence. The list is `BANNED` in `scripts/plate_lint.py`: "you've got this", "just try harder", and the rest.
 
 ## 3b. Present before you draft
 
