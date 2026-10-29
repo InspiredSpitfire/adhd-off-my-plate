@@ -1,5 +1,6 @@
 {
   "name": "adhd-off-my-plate",
+  "displayName": "ADHD: Off My Plate?",
   "version": "0.2.1",
   "description": "ADHD: Off My Plate? A chief of staff for one ADHD brain. Hand it a messy brain dump, a to-do list that is too long, your inbox, your calendar, and the projects you never finished. It hands back one Plate: what it is taking off you (with approval gates), the 1 to 3 things that actually matter today, what to let go of without guilt, your single next step, one unfinished project to revive with one tiny step, and the things you are not seeing. Sized to the brain that showed up (Feral, Froggy, Foggy, Fried). Written to be ready for a proactive morning routine in Claude Duet (whether Duet runs plugin skills is unconfirmed); runs today in Claude Code.",
   "author": {
@@ -7,6 +8,9 @@
   },
   "homepage": "https://github.com/InspiredSpitfire/adhd-off-my-plate",
   "repository": "https://github.com/InspiredSpitfire/adhd-off-my-plate",
+  "documentationUrl": "https://github.com/InspiredSpitfire/adhd-off-my-plate#readme",
+  "supportUrl": "https://github.com/InspiredSpitfire/adhd-off-my-plate/issues",
+  "privacyPolicyUrl": "https://github.com/InspiredSpitfire/adhd-off-my-plate#privacy",
   "license": "MIT",
   "keywords": [
     "adhd",
