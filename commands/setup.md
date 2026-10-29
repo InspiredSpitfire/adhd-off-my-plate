@@ -1,7 +1,7 @@
 ---
 name: setup
 description: Create your Off My Plate workspace (default ~/plate, never inside a project repo) and answer the three questions that size every Plate.
-argument-hint: [optional workspace path]
+argument-hint: '[optional workspace path]'
 ---
 
 Set up the Off My Plate workspace.

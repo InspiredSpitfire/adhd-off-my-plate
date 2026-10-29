@@ -9,7 +9,7 @@ All notable changes to this plugin. Dates are release dates.
 - RULES §3a, "No shell: run the lint by hand": a step-by-step mirror of `plate_lint.py` for runtimes with no shell. The date sweep comes first; every `YYYY-MM-DD` outside Evidence is either repeated exactly there or labeled. `morning-plate` and `plate-triage` route a no-shell run to it, and a run with a shell but no reviewer agent now runs the script and says only UNREVIEWED.
 
 ### Changed
-- Directory submission pass: the manifest drops the explicit `icon` field (the directory auto-detects the PNG in the manifest folder), prose stops naming the icon path, the marketplace entry counts seven commands, and the README gains a Privacy section.
+- Directory submission pass: the manifest drops the explicit `icon` field (the directory auto-detects the PNG in the manifest folder), prose stops naming the icon path, the marketplace entry counts seven commands, every command's `argument-hint` is quoted (the directory's YAML parser rejected `/plate`'s two bracketed groups), and the README gains a Privacy section.
 
 ### Fixed
 - With no shell, unattended runs shipped Plates with unlabeled dates (2 of 4 Duet sandbox check-ins). After §3a and two wording fixes (DRAFT items name their contents by topic, never by an action word; the brief's first line is always the state line), 4 of 4 check-ins passed every hard check.
