@@ -23,7 +23,7 @@ Run every one. Report only the hits, with where each was found.
 1. **Commitment with no task.** An "I owe them" row from `inbox-sweep` (or a promise in the dump) that is not in Keep, Off my plate, or `later.md`. Quote it.
 2. **Deadline with no slot.** Anything due inside 72 hours, on the Plate or in `later.md`, that has no calendar block and no Keep slot. Say the date and the gap.
 3. **Event with no prep.** A calendar event in the next 48 hours that implies presenting, deciding, or bringing something, with nothing on the Plate for it.
-4. **Person past nudge-by.** `due.py` OVERDUE and TODAY rows from `waiting-on.md`. Offer the nudge as a DRAFT.
+4. **Person past nudge-by.** `due.py` OVERDUE and TODAY rows from `waiting-on.md`. Offer the nudge as a DRAFT, and when you write it, replace that row's `Nudged on` with today's date (AUTO: a workspace write). `due.py` then holds the row back for 7 days instead of re-offering the same nudge every run. A row `due.py` marks "nudged" is a second nudge: say so, and make it shorter than the first.
 5. **Graveyard due.** `due.py` rows from `graveyard.md` whose revive-by is today or past. Surface each once, then move its revive-by forward 30 days or to `never` on the human's word.
 6. **Money.** Unpaid invoices they are owed, bills due, renewals they meant to cancel, a quote they never sent, an offer they never priced. From the sweep and the dump.
 7. **Body and life.** Life anchors in `config.md` with no room in today's real hours: meds, food, movement, sleep, appointments overdue (vet, dentist, doctor, school forms), the dog. These outrank work items of equal urgency.

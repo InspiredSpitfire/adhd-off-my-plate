@@ -8,6 +8,10 @@ whats-missing and morning-plate cite a list instead of eyeballing three tables.
 Skips: template rows, rows with no ISO date, revive-by `never`, graveyard rows
 marked Vetoed, and waiting-on rows whose Status is done, closed, or resolved.
 
+A waiting-on row with a date in `Nudged on` comes due again NUDGE_AGAIN_DAYS
+after that nudge (or at its Nudge-by, whichever is later), so a nudge already
+drafted is not reported as overdue, and offered again, on every run.
+
 Usage: python3 scripts/due.py [WORKSPACE] [--within DAYS] [--today YYYY-MM-DD] [--json]
 WORKSPACE defaults to the RULES §2 lookup ($OFF_MY_PLATE_DIR, ./plate, ~/plate).
 Exit 0 always (it is a report); 2 if no workspace is found.
@@ -18,9 +22,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import date
+from datetime import date, timedelta
 
-from _ws import bad_date, column, find_workspace, first_date, is_blank_template_row, read_table
+from _ws import ISO_DATE, bad_date, column, find_workspace, first_date, is_blank_template_row, read_table
 
 
 def iso_day(text: str) -> date:
@@ -36,6 +40,7 @@ SOURCES = [
     ("later.md", "deadline", "deadline", "item"),
 ]
 CLOSED = ("done", "closed", "resolved", "received")
+NUDGE_AGAIN_DAYS = 7
 NOT_VETOED = {"", "no", "n", "-", "—", "none"}
 
 
@@ -58,12 +63,26 @@ def collect(workspace, today: date, within: int, warnings: list[str] | None = No
                 if bad_date(raw):
                     warnings.append(f"{filename} {row.get('id', '?')}: '{bad_date(raw)}' is not a real date; row skipped")
                 continue
+            nudged = None
+            if filename == "waiting-on.md":
+                nudged_raw = column(row, "nudged")
+                # A cell can hold several nudges; the latest one counts.
+                dates = [d for d in (first_date(m.group(0)) for m in ISO_DATE.finditer(nudged_raw)) if d]
+                nudged = max(dates, default=None)
+                if nudged is None and bad_date(nudged_raw):
+                    warnings.append(f"{filename} {row.get('id', '?')}: Nudged on '{bad_date(nudged_raw)}' is not a real date; ignored")
+                if nudged is not None and nudged > today:
+                    warnings.append(f"{filename} {row.get('id', '?')}: Nudged on {nudged.isoformat()} is in the future; typo?")
+                if nudged is not None:
+                    when = max(when, nudged + timedelta(days=NUDGE_AGAIN_DAYS))
             days = (when - today).days
             if days > within:
                 continue
             item = column(row, item_col)
             if filename == "waiting-on.md":
                 item = f"{column(row, 'who')}: {item}"
+                if nudged is not None:
+                    item += f" (nudged {nudged.isoformat()}; this would be nudge #2+)"
             hits.append({
                 "file": filename,
                 "id": row.get("id", ""),

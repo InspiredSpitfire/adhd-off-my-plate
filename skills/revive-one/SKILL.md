@@ -25,7 +25,7 @@ The reason is the step. Pick one:
 | Stalled because | The tiny step is |
 |---|---|
 | The next step is unclear | Write the next three steps on paper; do none of them (10 min) |
-| Waiting on someone | Draft the nudge (DRAFT gate) and set a nudge-by (5 min) |
+| Waiting on someone | Draft the nudge (DRAFT gate); in its `waiting-on.md` row, set `Nudged on` to today and a new nudge-by (5 min) |
 | A decision is missing | Make the decision for them, state it, and give the action that follows (recommended answer labeled INFERENCE) |
 | Novelty wore off | Change one thing about how it is done: new tool, new place, new format, a timer (10 min) |
 | Fear of the result | Ship the ugliest possible version to one safe person (10 min) |

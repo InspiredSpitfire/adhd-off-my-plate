@@ -108,6 +108,26 @@ with tempfile.TemporaryDirectory() as tmp:
     check("W-03" in reg_ids, "due.py: a non-UTF-8 byte does not crash the run")
     check(any("2026-13-40" in w for w in data["warnings"]), "due.py: an impossible date is warned about, not silently dropped")
     check("G-01" in reg_ids, "due.py: Vetoed 'no' is not a veto")
+
+    # Issue #1: a nudge already drafted pushes the row out NUDGE_AGAIN_DAYS from that nudge.
+    (ws / "waiting-on.md").write_text(
+        "| ID | Who | What | Since | Nudge-by | Nudged on | Status |\n|---|---|---|---|---|---|---|\n"
+        "| W-10 | Jordan | Feedback | 2026-10-12 | 2026-10-17 | 2026-10-18 | open |\n"
+        "| W-11 | Kai | Quote | 2026-10-01 | 2026-10-10 | 2026-10-11 | open |\n"
+        "| W-12 | Lee | Photos | 2026-10-01 | 2026-10-25 | 2026-10-16 | open |\n"
+        "| W-13 | Mo | Keys | 2026-10-01 | 2026-10-15 | 2026-10-99 | open |\n"
+        "| W-14 | Ny | Deck | 2026-10-01 | 2026-10-05 | 2026-10-06, 2026-10-18 | open |\n"
+        "| W-15 | Oz | Logo | 2026-10-01 | 2026-10-05 | 2027-10-18 | open |\n")
+    nudge = json.loads(run("due.py", str(ws), "--today", "2026-10-20", "--json").stdout)
+    by_id = {d["id"]: d for d in nudge["due"]}
+    check("W-10" not in by_id, "due.py: nudged 10-18 is not overdue on 10-20 (issue #1)")
+    check("W-11" in by_id and by_id["W-11"]["date"] == "2026-10-18" and "nudged 2026-10-11" in by_id["W-11"]["item"],
+          "due.py: nudged 10-11 comes due again 10-18 and says it was nudged")
+    check("W-12" not in by_id, "due.py: an early nudge never pulls Nudge-by earlier")
+    check("W-13" in by_id and any("2026-10-99" in w for w in nudge["warnings"]),
+          "due.py: an impossible Nudged on is warned about and ignored")
+    check("W-14" not in by_id, "due.py: with two nudge dates in one cell, the latest counts")
+    check(any("W-15" in w and "future" in w for w in nudge["warnings"]), "due.py: a Nudged on date in the future is warned about")
     bad_today = run("due.py", str(ws), "--today", "yesterday")
     check(bad_today.returncode == 2 and "Traceback" not in bad_today.stderr, "due.py: a bad --today is a clean usage error")
     missing_env = run("due.py", env={"OFF_MY_PLATE_DIR": str(tmp / "nope")})

@@ -17,7 +17,7 @@ plate/
   later.md         real items that did not make today's Plate: not dropped, not forgotten
   projects.md      every unfinished project: status, last touched, why it stalled, revival count
   graveyard.md     everything let go of, each with a revive-by date or `never`
-  waiting-on.md    what other people owe them: who, what, since when, nudge-by
+  waiting-on.md    what other people owe them: who, what, since when, nudge-by, nudged on
   parking-lot.md   ideas that arrived mid-task; one line each, no action
   drafts/          DRAFT-gated text when no connector drafts folder exists: one file per draft
   notes/           AUTO outputs: summaries, lookups, pulled threads

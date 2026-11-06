@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.2.1 (2026-10-29). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; directory submission pending.
+> Status: v0.2.2 (2026-11-06). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; submitted to the Claude plugin directory 2026-10-29, in review.
 
 ## What you hand it
 
@@ -27,6 +27,24 @@ A chief of staff does the opposite. You dump everything on the desk, and they ha
 | **Next step** | One physical action, ten minutes or less. One. The lint fails a Plate with two. |
 | **Revive one** | One unfinished project, why it stalled, one tiny step that un-sticks it |
 | **What you're missing** | Commitments with no task, deadlines with no slot, people waiting, money on the table, the dog |
+
+Here's the middle of a real one, from a Foggy Tuesday ([the whole Plate](examples/sample-plate.md)):
+
+```markdown
+## Keep (2 real hours, longest block 75 min)
+1. Send the agency invoice once the draft is in your inbox: $1,200 outstanding,
+   and money outranks everything else on the list today.
+2. Text the dentist back with one of the two offered times.
+
+## Let go
+- Redo the whole website → graveyard · revive-by: 2026-12-01 · Nobody is waiting,
+  and "redo everything" is what a Foggy brain reaches for instead of the invoice.
+
+## Next step
+> Go to the car and get the permission slip. Put it in your bag. (3 min)
+```
+
+Seventeen things went into that dump. Two made Keep, plus a permission slip.
 
 Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands you the final text and tells you exactly where to click. The plugin itself never sends, pays, books, cancels, or deletes; those are your hands, every time.
 
@@ -90,17 +108,18 @@ Four clean check-ins is evidence, not proof. Run `python3 sandbox/duet_sandbox.p
 
 ## Install
 
-One step, inside Claude Code:
+Inside Claude Code:
 
 ```
-/plugin install adhd-off-my-plate --marketplace InspiredSpitfire/adhd-off-my-plate
+/plugin marketplace add InspiredSpitfire/adhd-off-my-plate
+/plugin install adhd-off-my-plate@adhd-off-my-plate
 ```
 
 Or from a terminal:
 
 ```bash
 claude plugin marketplace add InspiredSpitfire/adhd-off-my-plate
-claude plugin install adhd-off-my-plate
+claude plugin install adhd-off-my-plate@adhd-off-my-plate
 ```
 
 Then `/setup`. It makes your workspace at `~/plate`, never inside whatever project folder you happen to be standing in, keeps it out of git, and asks the three questions that size every Plate. Skip any of them and it guesses, out loud.

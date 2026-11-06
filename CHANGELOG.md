@@ -2,6 +2,15 @@
 
 All notable changes to this plugin. Dates are release dates.
 
+## [0.2.2] - 2026-11-06
+
+### Fixed
+- `due.py` now reads the waiting-on `Nudged on` column ([#1](https://github.com/InspiredSpitfire/adhd-off-my-plate/issues/1), thanks @mattabate). A nudged row comes due again 7 days after the nudge (or at its Nudge-by, whichever is later), so a nudge already drafted stops showing as OVERDUE and being offered again on every run. `whats-missing`, `morning-plate`, and `revive-one` write today's date into `Nudged on` when they draft a nudge, and a second nudge is labeled as one. If a `Nudged on` cell holds several dates the latest counts, and a date in the future is warned about. Six new selftest checks (33 in all).
+- README install lines use the documented form: `marketplace add`, then `install adhd-off-my-plate@adhd-off-my-plate` ([#2](https://github.com/InspiredSpitfire/adhd-off-my-plate/issues/2)).
+
+### Changed
+- README shows a trimmed real Plate right under "What you get back" ([#2](https://github.com/InspiredSpitfire/adhd-off-my-plate/issues/2)).
+
 ## [0.2.1] - 2026-10-29
 
 ### Added
