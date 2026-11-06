@@ -2,6 +2,11 @@
 
 All notable changes to this plugin. Dates are release dates.
 
+## [0.2.3] - 2026-11-06
+
+### Fixed
+- The name is ADHD: Off My Plate, with no question mark. The listing display name, the manifest and marketplace descriptions, and the README title had one; all four are fixed.
+
 ## [0.2.2] - 2026-11-06
 
 ### Fixed
@@ -18,7 +23,7 @@ All notable changes to this plugin. Dates are release dates.
 - RULES §3a, "No shell: run the lint by hand": a step-by-step mirror of `plate_lint.py` for runtimes with no shell. The date sweep comes first; every `YYYY-MM-DD` outside Evidence is either repeated exactly there or labeled. `morning-plate` and `plate-triage` route a no-shell run to it, and a run with a shell but no reviewer agent now runs the script and says only UNREVIEWED.
 
 ### Changed
-- Directory submission pass: the manifest drops the explicit `icon` field (the directory auto-detects the PNG in the manifest folder), prose stops naming the icon path, the marketplace entry counts seven commands, every command's `argument-hint` is quoted (the directory's YAML parser rejected `/plate`'s two bracketed groups), the README gains a Privacy section, and `plugin.json` sets `displayName` ("ADHD: Off My Plate?") plus documentation, support, and privacy links for the listing.
+- Directory submission pass: the manifest drops the explicit `icon` field (the directory auto-detects the PNG in the manifest folder), prose stops naming the icon path, the marketplace entry counts seven commands, every command's `argument-hint` is quoted (the directory's YAML parser rejected `/plate`'s two bracketed groups), the README gains a Privacy section, and `plugin.json` sets `displayName` plus documentation, support, and privacy links for the listing.
 - New listing icon: a neon-ice plate in a hot pink rim, with purple dots leaving the middle and flying off over the edge. Things coming off the plate, which is the whole product.
 
 ### Fixed

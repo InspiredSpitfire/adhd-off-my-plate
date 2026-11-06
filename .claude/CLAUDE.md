@@ -1,6 +1,6 @@
-# ADHD: Off My Plate? (Claude Code plugin)
+# ADHD: Off My Plate (Claude Code plugin)
 
-A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate?** (named by Inspired Spitfire 2026-10-22). Slug: `adhd-off-my-plate`. Status: v0.2.2 (2026-11-06). Public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go). First live run on the owner's real inbox and calendar 2026-10-22, reviewed to PASS. Submitted to the Claude plugin directory 2026-10-29 (in review). Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
+A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate** (named by Inspired Spitfire 2026-10-22; no question mark, anywhere). Slug: `adhd-off-my-plate`. Status: v0.2.3 (2026-11-06). Public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go). First live run on the owner's real inbox and calendar 2026-10-22, reviewed to PASS. Submitted to the Claude plugin directory 2026-10-29 (in review). Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
 
 ## Layout
 - `RULES.md` — the shared rulebook every skill reads: workspace, the Plate format, approval gates, evidence labels, brain-state sizing, the graveyard. Change rules here, not in seven places.

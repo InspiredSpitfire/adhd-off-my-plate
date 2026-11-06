@@ -1,4 +1,4 @@
-# ADHD: Off My Plate?
+# ADHD: Off My Plate
 
 A chief of staff for one ADHD brain, built as a Claude Code plugin and written to be ready for a proactive morning routine in Claude Duet (whether Duet runs plugin skills is unconfirmed; see DUET.md).
 
@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.2.2 (2026-11-06). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; submitted to the Claude plugin directory 2026-10-29, in review.
+> Status: v0.2.3 (2026-11-06). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; submitted to the Claude plugin directory 2026-10-29, in review.
 
 ## What you hand it
 
