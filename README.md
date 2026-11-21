@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.2.4 (2026-11-21), the directory edition. Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS.
+> Status: v0.2.4 (2026-11-21), the directory edition. The skills and rules were built, smoke-tested on the sample dump, and independently reviewed through three passes to PASS on the scripted edition, with a first live run on a real inbox and calendar 2026-10-22 ([REVIEW.md](REVIEW.md)). This edition's written checks were reviewed against the scripts on the example files on 2026-11-21; they have not had a live run of their own.
 >
 > **Two editions.** This one is all Markdown: no scripts, so it runs anywhere Claude does, Cowork and Duet included, and it is the one in the Claude plugin directory. Every check is a written procedure Claude follows step by step. The [scripted edition](https://github.com/InspiredSpitfire/adhd-off-my-plate) on GitHub's main branch does the same counting in code (a lint script, a due-date counter, a repeat finder) and adds a scheduler example and a Duet sandbox. Same skills, same Plate.
 
@@ -56,7 +56,7 @@ Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands 
 |---|---|
 | "Be my assistant" in a chat box | Seven skills that read one shared workspace and one rulebook |
 | Gives you a prioritized list | Gives you a **shorter** list and makes the demotions for you |
-| "Don't send anything" is a sentence you hope it read | Every item carries a gate; a script fails items whose verb leaves the building but are marked AUTO or DRAFT, and a reviewer agent reads the rest |
+| "Don't send anything" is a sentence you hope it read | Every item carries a gate; the lint checklist (RULES §3a) fails items whose verb leaves the building but are marked AUTO or DRAFT, and a reviewer agent reads the rest |
 | Deletes what you drop | Moves it to a **graveyard** with revival rights; you can let go because it isn't gone |
 | Assumes you're the same person every day | Sizes the day to **Feral, Froggy, Foggy, or Fried** you |
 | "Here are 5 next steps" | **One** next step. A list of options is a decision, and a decision is the thing this brain can't spare |
@@ -126,7 +126,7 @@ claude plugin marketplace add InspiredSpitfire/adhd-off-my-plate
 claude plugin install adhd-off-my-plate@adhd-off-my-plate
 ```
 
-Then `/setup`. It makes your workspace at `~/plate`, never inside whatever project folder you happen to be standing in, keeps it out of git, and asks the three questions that size every Plate. Skip any of them and it guesses, out loud.
+Then `/setup`. It makes your workspace at `~/plate`, never inside whatever project folder you happen to be standing in, keeps it out of git (when Claude can run a shell command), and asks the three questions that size every Plate. Skip any of them and it guesses, out loud.
 
 ## Try it in 2 minutes
 
