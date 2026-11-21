@@ -1,17 +1,16 @@
 # ADHD: Off My Plate (Claude Code plugin)
 
-A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate** (named by Inspired Spitfire 2026-10-22; no question mark, anywhere). Slug: `adhd-off-my-plate`. Status: v0.2.3 (2026-11-06). Public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go). First live run on the owner's real inbox and calendar 2026-10-22, reviewed to PASS. Submitted to the Claude plugin directory 2026-10-29 (in review). Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
+A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate** (named by Inspired Spitfire 2026-10-22; no question mark, anywhere). Slug: `adhd-off-my-plate`. Status: v0.2.4 (2026-11-21), directory edition (branch `directory`). Public at github.com/InspiredSpitfire/adhd-off-my-plate since 2026-10-22 (pushed on the owner's explicit go). First live run on the owner's real inbox and calendar 2026-10-22, reviewed to PASS. Submitted to the Claude plugin directory 2026-10-29 (in review). Built as the demo for the owner's Claude Duet application: the `morning-plate` skill is the routine Duet would run each morning on its own cloud machine.
 
 ## Layout
 - `RULES.md` — the shared rulebook every skill reads: workspace, the Plate format, approval gates, evidence labels, brain-state sizing, the graveyard. Change rules here, not in seven places.
 - `skills/` — seven skills. `plate-triage` is the product; the other six are its organs and also run alone.
-- `agents/plate-reviewer.md` — independent PASS / NEEDS REVISION reviewer. Runs `scripts/plate_lint.py` and judges the Plate against the workspace.
+- `agents/plate-reviewer.md` — independent PASS / NEEDS REVISION reviewer. Runs the RULES §3a lint itself and judges the Plate against the workspace.
 - `commands/` — `/setup`, `/plate`, `/morning`, `/due`, `/let-go`, `/revive`, `/missing`.
 - `templates/` — blank workspace files copied on first run.
-- `examples/` — a sample brain dump, a passing Plate, a Plate with planted defects (the lint must keep catching them), `workspace/` (the fixture the script self-test pins), and the scheduling examples `morning.sh` and the launchd plist.
-- `scripts/check_plugin.py` — component reachability check. `scripts/plate_lint.py` — structural check of a Plate. `due.py`, `surfaced.py`, `init_workspace.py` (shared helper `_ws.py`) — see RULES §2b; `selftest.py` pins them.
+- `examples/` — a sample brain dump, a passing Plate, a Plate with planted defects (the lint must keep catching them), and `workspace/`, a fixture workspace.
+- No scripts. The Claude plugin directory refuses scripts and other code from publishers that are not a Verified organization, so this branch is all Markdown, JSON, and the PNG icon. Every counted check is a written procedure in RULES (§2c due, §2d repeats, §2e setup, §3a lint).
 - `DUET.md` — how this runs inside Claude Duet, with every Duet fact labeled by source.
-- `sandbox/` — the Duet sandbox: fake mail, calendar, and drive connectors, a headless runner, and a grader. `python3 sandbox/selftest_sandbox.py` is free; `python3 sandbox/duet_sandbox.py` spends real usage. Runs get a plugin copy without `sandbox/` so fixtures and the answer key stay unreadable.
 
 ## Rules
 - The Plate has exactly one next step. Not a menu. The lint enforces it; do not soften the lint.
@@ -20,7 +19,9 @@ A chief of staff for one ADHD brain. Product name: **ADHD: Off My Plate** (named
 - The Brain-State System (Feral, Froggy, Foggy, Fried) is Inspired Spitfire's framework: four states, never renamed, definitions in RULES §5 and authoritative in `she-rebels-brand-kit`. Skill internals stay plain so any user can run them in their own voice.
 - Never invent a deadline, a sender, a commitment, or a calendar event. Everything in a Plate is EVIDENCE (quoted), INFERENCE (reasoned, stated), or ASSUMED (a guess the human can correct).
 - No medical or diagnostic claims anywhere. Brain states are a way to size a day, not treatment.
-- After any change run `python3 scripts/check_plugin.py && claude plugin validate . --strict --profile directory` and the commands in README "Verify" (two lint runs and `selftest.py`).
+- Two editions. `main` is the scripted edition (scripts, sandbox, scheduler examples), installed from GitHub. `directory` is this Markdown-only edition, submitted to the directory. A fix to a skill, command, agent, template, or RULES lands on `main` first and is then carried to `directory` by hand, with every script call rewritten to its RULES procedure. Never merge `main` into `directory` wholesale: it would bring the scripts back.
+- Allowed here: Markdown, text, JSON, YAML, and PNG/JPEG/GIF/WebP/ICO images. No file may start with `#!`. No `.svg`, no symlinks, no `.gitkeep`, no package files, no hooks.
+- After any change run `claude plugin validate . --strict --profile directory` and check the allowed-files rule: `git ls-files | grep -v -E '\.(md|txt|json|ya?ml|png|jpe?g|gif|webp|ico)$'` must print only `.gitignore` and `LICENSE`.
 - Publishing, pushing to a public repo, submitting to a marketplace, or listing for sale is an outward action: needs the owner's explicit go.
-- Rules live in `.claude/CLAUDE.md` (plugin validator warns on a root CLAUDE.md); `AGENTS.md` symlinks to it. The listing icon is the PNG in the manifest folder, auto-detected by the directory (no `icon` field: a manifest or prose naming the image path triggers a directory policy hold); its editable source is the SVG in `assets/` (render with QuickLook: `qlmanage -t -s 1024`, rename the output). The directory keeps the first submitted icon permanently.
+- Rules live in `.claude/CLAUDE.md` (plugin validator warns on a root CLAUDE.md). On `main`, `AGENTS.md` symlinks to it; this branch has no `AGENTS.md`, because a symlink is not an allowed file. The listing icon is the PNG in the manifest folder, auto-detected by the directory (no `icon` field: a manifest or prose naming the image path triggers a directory policy hold); its editable SVG source lives on `main` in `assets/` (an SVG other than the icon is refused here). The directory keeps the first submitted icon permanently.
 - README, DUET.md pitch copy, and launch posts are Inspired Spitfire territory: load `she-rebels-brand-kit` before editing them. Public author name is "Inspired Spitfire", never a legal name.

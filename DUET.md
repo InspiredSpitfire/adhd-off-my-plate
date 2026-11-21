@@ -25,7 +25,7 @@ Written 2026-10-22, the day after Anthropic announced Claude Duet. Everything be
 | `DRAFT` items | Duet writes them into drafts. |
 | `NEEDS YOUR GO` items | Duet's approval step. This plugin's gates are designed to line up with Duet's own stop points, so the brief's "Needs your go" block is the same list Duet would pause on. (INFERENCE.) |
 | The brief | The morning brief. Phone-sized on purpose. |
-| `plate_lint.py` and `plate-reviewer` | Run before the brief goes out when the runtime has a shell and plugin agents. (ASSUMED: nothing in coverage says Duet's cloud machine exposes a shell or runs plugin subagents. With no shell, `morning-plate` runs the RULES §3a lint by hand, date sweep first, and labels the brief UNLINTED, UNREVIEWED. With a shell but no agents, the lint script runs and the brief says UNREVIEWED.) |
+| The lint (RULES §3a) and `plate-reviewer` | The lint is a written checklist, date sweep first, so it runs with or without a shell. The reviewer runs when the runtime has plugin agents. (ASSUMED: nothing in coverage says Duet runs plugin subagents. Without them, the brief says UNREVIEWED.) |
 | Mid-day alerts | `whats-missing` with a 48-hour deadline filter, on Duet's every-few-hours check (FACT: coverage says it checks every few hours and alerts when something needs attention). Dedupe against the last 7 Plates so it does not nag. (INFERENCE: whether a plugin skill can be the thing it runs on each check is unconfirmed.) |
 
 ## What this demonstrates for a Duet application
@@ -34,7 +34,7 @@ Written 2026-10-22, the day after Anthropic announced Claude Duet. Everything be
 2. **Approval design that matches Duet's.** Three gates, lint-enforced, so the agent can do real work alone and stop in exactly the right places.
 3. **Memory across runs.** The graveyard, waiting-on, projects, and history files are the agent's memory of what it already said, what you already vetoed, and what you already dropped. A proactive agent without that memory is a nag.
 4. **A real use case for a real small business.** One person, several brands, an inbox, a calendar, half-finished products, and a brain that is not the same every day. That is most solo operators; the ADHD framing makes the constraints explicit instead of pretending they do not exist.
-5. **Verifiable output.** A script decides whether the Plate kept to one next step. The model does not grade itself.
+5. **Verifiable output.** A fixed checklist decides whether the Plate kept to one next step, and an independent reviewer runs it again. The author does not grade itself. (The scripted edition on GitHub runs the same checks as code.)
 
 ## What Duet cannot do yet, and how the plugin copes
 

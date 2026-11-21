@@ -7,14 +7,9 @@ description: The gap finder. Cross-references the brain dump, the inbox, the cal
 
 Read `${CLAUDE_PLUGIN_ROOT}/RULES.md` first (§9, evidence labels), then every workspace file. This skill is only as good as the cross-reference, so read all of it.
 
-## Start with the scripts
+## Start with the counts
 
-```
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/due.py" <workspace> --within 3
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/surfaced.py" <workspace> --threshold 3
-```
-
-The first is the evidence for checks 2, 4, and 5; the second for check 8. Cite their lines (`due.py: W-01 nudge 3d late`). Do not re-derive dates from the tables by eye. If there is no shell, read the tables and say so.
+Run the due check (RULES §2c) with a 3-day window, and the repeat check in avoided mode (RULES §2d). The first is the evidence for checks 2, 4, and 5; the second for check 8. Cite their lines (`due check: OVERDUE 3d · waiting-on.md W-01`). Count dates with the procedure, not by eye.
 
 ## The eight checks
 
@@ -23,11 +18,11 @@ Run every one. Report only the hits, with where each was found.
 1. **Commitment with no task.** An "I owe them" row from `inbox-sweep` (or a promise in the dump) that is not in Keep, Off my plate, or `later.md`. Quote it.
 2. **Deadline with no slot.** Anything due inside 72 hours, on the Plate or in `later.md`, that has no calendar block and no Keep slot. Say the date and the gap.
 3. **Event with no prep.** A calendar event in the next 48 hours that implies presenting, deciding, or bringing something, with nothing on the Plate for it.
-4. **Person past nudge-by.** `due.py` OVERDUE and TODAY rows from `waiting-on.md`. Offer the nudge as a DRAFT, and when you write it, replace that row's `Nudged on` with today's date (AUTO: a workspace write). `due.py` then holds the row back for 7 days instead of re-offering the same nudge every run. A row `due.py` marks "nudged" is a second nudge: say so, and make it shorter than the first.
-5. **Graveyard due.** `due.py` rows from `graveyard.md` whose revive-by is today or past. Surface each once, then move its revive-by forward 30 days or to `never` on the human's word.
+4. **Person past nudge-by.** The due check's OVERDUE and TODAY rows from `waiting-on.md`. Offer the nudge as a DRAFT, and when you write it, replace that row's `Nudged on` with today's date (AUTO: a workspace write). The due check then holds the row back for 7 days instead of re-offering the same nudge every run. A row the due check marks "nudged" is a second nudge: say so, and make it shorter than the first.
+5. **Graveyard due.** Due-check rows from `graveyard.md` whose revive-by is today or past. Surface each once, then move its revive-by forward 30 days or to `never` on the human's word.
 6. **Money.** Unpaid invoices they are owed, bills due, renewals they meant to cancel, a quote they never sent, an offer they never priced. From the sweep and the dump.
 7. **Body and life.** Life anchors in `config.md` with no room in today's real hours: meds, food, movement, sleep, appointments overdue (vet, dentist, doctor, school forms), the dog. These outrank work items of equal urgency.
-8. **The avoided thing.** The item `surfaced.py --threshold 3` lists (three or more Plates without moving), or that the dump mentions with a sigh. Name it once, plainly, and offer a 5-minute version. Do not lecture.
+8. **The avoided thing.** The item the repeat check's avoided mode lists (three or more Plates without moving), or that the dump mentions with a sigh. Name it once, plainly, and offer a 5-minute version. Do not lecture.
 
 ## Rules
 

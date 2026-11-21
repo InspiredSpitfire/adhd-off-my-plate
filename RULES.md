@@ -24,27 +24,53 @@ plate/
   history/         plate-YYYY-MM-DD-HHMM.md, one per run, so two runs on one day never overwrite (empty on the first run)
 ```
 
-Find it in this order: a location the user or the routine prompt names (it wins over everything, including a `config.md` inside some other folder), then `$OFF_MY_PLATE_DIR`, then `./plate/` if it already exists, then `~/plate/`. In Claude Duet the workspace is a folder in a connected drive, since Duet cannot read local files; the routine prompt names it. If none exists, say so and run `/setup` (`scripts/init_workspace.py`), which creates it at `~/plate`, never in the current project folder, and keeps it out of git. Every `plate/` path in a skill means this workspace, wherever it lives.
+Find it in this order: a location the user or the routine prompt names (it wins over everything, including a `config.md` inside some other folder), then `$OFF_MY_PLATE_DIR`, then `./plate/` if it already exists, then `~/plate/`. In Claude Duet the workspace is a folder in a connected drive, since Duet cannot read local files; the routine prompt names it. If none exists, say so and run `/setup` (§2e), which creates it at `~/plate`, never in the current project folder, and keeps it out of git. Every `plate/` path in a skill means this workspace, wherever it lives.
 
 Never ask for something the workspace already answers. Ask at most 3 questions per run, all in one message, ranked by how much the answer changes the Plate. If the human is away, proceed on labeled assumptions. Never silently overwrite a workspace file other than `plate.md`: append, or show the change first. Template tables ship one blank row (`PR-01`, `G-01`, `W-01`, `L-01`): fill that row first, then append.
 
-## 2b. The scripts
+## 2b. The counted checks
 
-The model does not eyeball what a script can count. Run these and cite their output:
+This edition ships no scripts. Everything is Markdown, so it runs the same in Claude Code, Cowork, and Claude Duet, with or without a shell. The counting is yours, done with the written procedures below. Work each one step by step, write down what you counted, and cite it (`due check:`, `repeat check:`). Never skip one because the answer feels obvious: these are the checks a tired eye gets wrong. (The scripted edition, which does this counting in code, is on GitHub: github.com/InspiredSpitfire/adhd-off-my-plate.)
 
-| Script | What it decides | Who runs it |
+| Check | What it decides | Who runs it |
 |---|---|---|
-| `scripts/plate_lint.py <plate>` | the Plate's structure: one next step, gates, Keep limits, revive-by, evidence labels | `plate-triage`, `morning-plate`, `plate-reviewer` |
-| `scripts/due.py [workspace] --within N` | which nudge-by, revive-by, and deadline dates are overdue, today, or inside N days | `whats-missing` (checks 2, 4, 5), `morning-plate`, `/due` |
-| `scripts/surfaced.py [workspace] --candidate <plate>` | which Missing and Let-go bullets the last 7 Plates already said; exit 1 means repeats | `morning-plate`, `plate-reviewer` |
-| `scripts/surfaced.py [workspace] --threshold 3` | the avoided thing: what has sat on 3+ Plates | `whats-missing` check 8 |
-| `scripts/init_workspace.py [path]` | creates the workspace safely, never overwrites | `/setup` |
+| §3a, the lint | the Plate's structure: one next step, gates, Keep limits, revive-by, evidence labels | `plate-triage`, `morning-plate`, `plate-reviewer` |
+| §2c, the due check | which nudge-by, revive-by, and deadline dates are overdue, today, or inside N days | `whats-missing` (checks 2, 4, 5), `morning-plate`, `/due` |
+| §2d, the repeat check, new-Plate mode | which Missing and Let-go bullets the last 7 Plates already said | `morning-plate`, `plate-reviewer` |
+| §2d, the repeat check, avoided mode | what has sat on 3 or more Plates | `whats-missing` check 8 |
+| §2e, setup | creates the workspace, never overwrites | `/setup` |
 
-Plugin paths: skills refer to the plugin root as `${CLAUDE_PLUGIN_ROOT}`. If that variable is unset in the runtime, the plugin root is the directory two levels above any skill's `SKILL.md` (the skill's base directory is shown when it loads). **Before running any script, write the plugin root and the workspace as literal absolute paths, unquoted, one command per call:** `python3 /Users/you/.claude/plugins/cache/adhd-off-my-plate/adhd-off-my-plate/0.2.0/scripts/due.py /Users/you/plate --within 2`. The unattended recipe allows the three scripts by exact path, and `dontAsk` denies anything else: a shell variable (`${CLAUDE_PLUGIN_ROOT}`, `$HOME`), a quoted path, a chained second command, or a `python3 -c` one-liner. Tested 2026-10-27. If the runtime has no shell at all (some proactive runtimes), the scripts cannot run: run §3a by hand, say so, and label the Plate `UNLINTED`.
+Plugin paths: skills refer to the plugin root as `${CLAUDE_PLUGIN_ROOT}`. If that variable is unset in the runtime, the plugin root is the directory two levels above any skill's `SKILL.md` (the skill's base directory is shown when it loads).
+
+## 2c. The due check
+
+1. **Today.** Take today's date from the runtime (the session date or the system clock) and write it down: `Today: YYYY-MM-DD`. If you cannot tell, write it as ASSUMED.
+2. **Read three tables:** `waiting-on.md` (the `Nudge-by` column), `graveyard.md` (`Revive-by`), and `later.md` (`Deadline`). The date is the first `YYYY-MM-DD` in the cell.
+3. **Skip** a template row (only its ID filled; `open` and `0` count as empty), a row with no `YYYY-MM-DD` in its date cell, a revive-by of `never`, a graveyard row whose `Vetoed` cell holds anything but blank, no, n, -, —, or none, and a waiting-on row whose `Status` starts with done, closed, resolved, or received. A date that does not exist (2026-02-30) is not a date: skip the row and warn `<file> <id>: '<cell>' is not a real date; ignored`.
+4. **Nudged rows.** In `waiting-on.md`, read `Nudged on`. If it holds one or more real dates, the latest one counts, and the row is due on whichever is later: its Nudge-by, or that nudge plus 7 days. Add `(nudged YYYY-MM-DD; this would be nudge #2+)` to its line. A `Nudged on` date after today still counts and gets a warning: `Nudged on YYYY-MM-DD is in the future; typo?`. Text there that is not a real date gets the not-a-real-date warning and is ignored.
+5. **Count the days** from today to each due date on a calendar, not by feel. When the count crosses a month end, write out the month's length (October has 31 days). Before today is OVERDUE, today is TODAY, 1 to N days ahead is SOON, where N is the window the caller asks for (3 if none). Anything later is not reported.
+6. **Write the result,** one line per row, overdue first, then by date: `OVERDUE 3d · waiting-on.md W-01 · nudge-by 2026-10-18 · Feedback (Jordan)`. A clean result is a result: `due check: nothing due within 3 days`. Warnings go after the list. Every date in the result is already cited: quote the line in Evidence when it reaches a Plate.
+
+## 2d. The repeat check
+
+A chief of staff who repeats itself every morning gets ignored. Past Plates live in `history/` as `plate-YYYY-MM-DD-HHMM.md`. Use the 7 newest by filename (fewer on a young workspace; with none, nothing is a repeat).
+
+1. **Collect.** From each past Plate take the bullets under `## What you're missing` and `## Let go`, skipping a bullet that is only `none`, `nothing`, or `nothing today`. Compare Missing with Missing and Let-go with Let-go, never across.
+2. **Judge a bullet by its head:** the text before the first ` · ` and before any ` → `. Its content words are what is left after dropping words of two letters or fewer and small words (a, an, the, and, or, but, of, to, in, on, at, by, for, with, from, is, are, was, be, it, that, this, you, your, my, our, their, not, no, has, have, will, can, should, just, about, after, before, today, tomorrow, yesterday, found, plate, gate, auto, draft, needs, keep, let, graveyard, revive-by, never). Treat a plural and its singular as one word ("appointments" is "appointment"), and drop a trailing `'s`.
+3. **Same item** only when the two heads share at least 3 content words and the shared words are at least half of all the distinct content words in both. A head with fewer than 3 content words matches only an identical set. "Vet appointment Tuesday" and "dentist appointment Tuesday" are two errands. A false repeat silently drops a real thing, so when in doubt it is not a repeat.
+4. **New-Plate mode** (a Plate before it ships): for each of its Missing and Let-go bullets, count the past Plates that hold the same item, once per Plate. 2 or more is a REPEAT: `repeat check: REPEAT · <head> · on 2026-11-02, 2026-11-04`. The caller cuts each REPEAT unless its deadline is inside 48 hours or the line says what changed since.
+5. **Avoided mode** (`whats-missing` check 8): list each item that sits on 3 or more of the past Plates, with their dates.
+
+## 2e. Setup
+
+1. **Where.** The path the human names; otherwise `$OFF_MY_PLATE_DIR` if the runtime can read it; otherwise `~/plate`. Never the current project folder unless the human names it.
+2. **Copy, never overwrite.** For each file in the plugin's `templates/` folder (`config.md`, `plate.md`, `later.md`, `projects.md`, `graveyard.md`, `waiting-on.md`, `parking-lot.md`), write a copy into the workspace only if no file of that name is there. Never merge into an existing file. Report `Created: <files>` and `Kept as is: <N> file(s)`. `drafts/`, `notes/`, and `history/` are made the first time a file lands in them.
+3. **Keep it out of git.** With a shell, run `git -C <workspace> rev-parse --show-toplevel`. If the workspace sits inside a repo and `git check-ignore` does not already cover it, append two lines to that repo's `.gitignore`: `# Off My Plate workspace: personal, never commit` and the workspace path relative to the repo root, ending in `/`. If the workspace is the repo root itself, write nothing and warn that nothing there is ignored; suggest another folder. Without a shell, say the git check was skipped.
+4. **Next.** On a new workspace: answer the three ★ questions in `config.md`. If it is not at `~/plate`, tell the human to set `OFF_MY_PLATE_DIR` to its path so scheduled runs find it.
 
 ## 3. The Plate
 
-Every run ends in this exact structure. `scripts/plate_lint.py` checks it; a Plate that fails lint is not finished.
+Every run ends in this exact structure. §3a checks it; a Plate that fails the check is not finished.
 
 ```
 # The Plate · YYYY-MM-DD · Brain: Feral | Froggy | Foggy | Fried
@@ -76,7 +102,7 @@ INFERENCE: <reasoned read, with what it rests on>
 ASSUMED: <guesses made to keep moving> | none
 ```
 
-Rules the lint enforces:
+Rules the lint (§3a) enforces:
 - **One next step.** A single line ending in a time box. No bullets, no "or", "then", "whichever", or "/". Ten minutes or less; five on Fried; `(0 min)` when the step is "Nothing today, on purpose." A list of options is a decision, and a decision is the thing this brain cannot spare right now.
 - **Keep is sized to the brain.** Feral 3, Froggy 3, Foggy 2, Fried 1. If the dump had forty items, thirty-seven of them go to Off my plate, Let go, `later.md`, or `parking-lot.md`.
 - **Every Off-my-plate item has a gate.** `AUTO` items start with a reading, sorting, summarizing, filing, or looking-up verb and act only inside `plate/`. `DRAFT` items start with a drafting verb (draft, write, prepare, compose) and only produce text. Anything that sends, emails, texts, messages, calls, shares, forwards, posts, schedules, books, orders, pays, submits, signs, cancels, deletes, or changes state in a connected account (archive, label, move, mark as spam) is `NEEDS YOUR GO`, including "draft it and send it". An AUTO item you cannot do yet (no connector, nothing pasted) stays AUTO with `· needs: <what>` appended; it is not DONE until it is done.
@@ -85,13 +111,11 @@ Rules the lint enforces:
 - **What you're missing is never empty.** If you truly found nothing, write the one place you could not look.
 - **Evidence section is present** with at least one EVIDENCE line and an ASSUMED line (or `ASSUMED: none`). Every date anywhere else on the Plate is either cited in Evidence or sits on a line labeled INFERENCE or ASSUMED.
 
-The lint's outward-verb check is a heuristic (leading verb plus execution verbs). It catches the common cases. The `plate-reviewer` agent reads every item too; the two together are the check, not the script alone.
+The lint's outward-verb rules are a heuristic (leading verb plus execution verbs). They catch the common cases. The `plate-reviewer` agent reads every item too and runs §3a again on its own; the two together are the check.
 
-## 3a. No shell: run the lint by hand
+## 3a. The lint
 
-Use this only when the runtime has no shell, so `plate_lint.py` cannot run. A runtime with a shell runs the script, even if it has no reviewer agent.
-
-Check the finished Plate before it is presented. If `plate.md` is already written, fix it in place. Then label it the way your skill says: the morning brief ends `UNLINTED, UNREVIEWED: no shell in this runtime`, and a presented Plate carries `UNLINTED`. A hand check is not the script, and the label says so.
+This edition has no lint script: this list is the lint. Run it on every finished Plate before it is presented, in this order, and fix what it finds in place. Then write one line of result for the record: `Lint (§3a): PASS` or `Lint (§3a): FAIL · <each failure>`. A FAIL means the Plate is not finished.
 
 **1. Date sweep, first, every time.** This is the check unattended runs fail. In the Duet sandbox (2026-10-28), two of four check-ins shipped one unlabeled date.
 - Go through Off my plate, Keep, Let go, Next step, Revive one, and What you're missing. List every `YYYY-MM-DD` you wrote. The title line and Evidence are exempt.
@@ -102,12 +126,12 @@ Check the finished Plate before it is presented. If `plate.md` is already writte
 - Two kinds slip:
   - **Dates you worked out**, like "the Friday after this one" or a deadline counted from an email. Add `(INFERENCE)` to that line, and put the basis in Evidence.
   - **Dates you copied from a workspace file** (`later.md`, `waiting-on.md`, a history Plate). Add an Evidence line that names the file and the row and repeats the same `YYYY-MM-DD`: `EVIDENCE: later.md L-01 deadline 2026-10-23`.
-- Never fix a miss by deleting a date the human needs. Dates in prose ("Nov 6") follow the same rule, but the script only catches the `YYYY-MM-DD` form.
+- Never fix a miss by deleting a date the human needs. Dates in prose ("Nov 6") follow the same rule; sweep for them too.
 
 **2. The rest of the lint, in order:**
 - **Title.** `# The Plate · YYYY-MM-DD · Brain: <Feral | Froggy | Foggy | Fried>`, and all seven sections present.
 - **Off my plate.** Every line is a checkbox item, `- [ ]` or `- [x]`, with `gate: AUTO`, `gate: DRAFT`, or `gate: NEEDS YOUR GO`. `- none` is allowed.
-  - A DRAFT item starts with a drafting verb (draft, write, prepare, compose, outline, put together) right after the checkbox. After that, none of these appears anywhere in the item, even to describe what the draft asks for: send, forward, move, archive, label, mark as, book, cancel, pay, order, buy, purchase, publish, transfer, ping, RSVP, submit, sign, delete, unsubscribe. An outreach verb (email, reply, ask, tell, confirm, and the rest of the AUTO list below) may not follow "and", "then", a comma, or a semicolon. Nouns are fine: "the reply", "the invoice". Name the draft's contents by topic: "Draft the W-9 reply to Dana (sync time, phishing warning)", not "with a request to move the sync". The script cannot tell describing an action from doing one, so it fails both.
+  - A DRAFT item starts with a drafting verb (draft, write, prepare, compose, outline, put together) right after the checkbox. After that, none of these appears anywhere in the item, even to describe what the draft asks for: send, forward, move, archive, label, mark as, book, cancel, pay, order, buy, purchase, publish, transfer, ping, RSVP, submit, sign, delete, unsubscribe. An outreach verb (email, reply, ask, tell, confirm, and the rest of the AUTO list below) may not follow "and", "then", a comma, or a semicolon. Nouns are fine: "the reply", "the invoice". Name the draft's contents by topic: "Draft the W-9 reply to Dana (sync time, phishing warning)", not "with a request to move the sync". The lint cannot tell describing an action from doing one, so it fails both.
   - An AUTO item never sends, books, pays, cancels, deletes, forwards, archives, labels, moves, or marks as anything. It never contains order, buy, publish, transfer, ping, or RSVP. It never starts with an outreach verb: email, text, message, call, reply, share, post, schedule, submit, sign, remove, unsubscribe, accept, decline, invite, confirm, approve, notify, tell, ask, or nudge. All of those are NEEDS YOUR GO, and so is anything else that changes state in a connected account. "Confirm the dentist slot" is NEEDS YOUR GO.
 - **Keep.** At least one numbered item, and no more than the brain state allows: Feral 3, Froggy 3, Foggy 2, Fried 1.
 - **Let go.** Every item has `revive-by:` followed by a `YYYY-MM-DD` date or `never`. `- none` is allowed.
@@ -115,7 +139,7 @@ Check the finished Plate before it is presented. If `plate.md` is already writte
 - **Revive one.** Exactly one `**Project:**` line with `stalled because` and `revival #N`. Exactly one `**Tiny step:**` line ending in `(N min)`, N at most 10, with none of the menu words. On Fried, the section is exactly `Revive: not today, on purpose.` and nothing else.
 - **What you're missing.** Not empty.
 - **Evidence.** It has an `EVIDENCE:` line and an `ASSUMED:` line (`ASSUMED: none` is fine).
-- **Tone.** No banned phrase outside Evidence. The list is `BANNED` in `scripts/plate_lint.py`: "you've got this", "just try harder", and the rest.
+- **Tone.** None of these outside Evidence, in any capitalization: "just try harder", "consistency is key", "just use a calendar", "you've got this" (or "youve got this"), "you got this", "no excuses", "hustle", "discipline".
 
 ## 3b. Present before you draft
 

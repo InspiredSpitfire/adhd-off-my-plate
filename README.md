@@ -6,7 +6,9 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.2.3 (2026-11-06). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; submitted to the Claude plugin directory 2026-10-29, in review.
+> Status: v0.2.4 (2026-11-21), the directory edition. Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS.
+>
+> **Two editions.** This one is all Markdown: no scripts, so it runs anywhere Claude does, Cowork and Duet included, and it is the one in the Claude plugin directory. Every check is a written procedure Claude follows step by step. The [scripted edition](https://github.com/InspiredSpitfire/adhd-off-my-plate) on GitHub's main branch does the same counting in code (a lint script, a due-date counter, a repeat finder) and adds a scheduler example and a Duet sandbox. Same skills, same Plate.
 
 ## What you hand it
 
@@ -71,7 +73,7 @@ Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands 
 | `let-it-go` | The drop audit. Three questions per item. Graveyard with revive-by dates. Decline text drafted. |
 | `revive-one` | One stalled project, one-clause diagnosis, one ten-minute step that addresses the reason it stalled. |
 | `whats-missing` | Eight cross-checks for what fell through the cracks, each hit with its source. |
-| `morning-plate` | The unattended version. No questions, assumptions labeled, AUTO and DRAFT done, NEEDS YOUR GO collected at the top of a phone-sized brief. Cuts anything it already told you twice (`scripts/surfaced.py`). |
+| `morning-plate` | The unattended version. No questions, assumptions labeled, AUTO and DRAFT done, NEEDS YOUR GO collected at the top of a phone-sized brief. Cuts anything it already told you twice (the repeat check). |
 
 Commands: `/setup`, `/plate`, `/morning`, `/due`, `/let-go`, `/revive`, `/missing`.
 
@@ -79,7 +81,7 @@ Commands: `/setup`, `/plate`, `/morning`, `/due`, `/let-go`, `/revive`, `/missin
 
 Duet is a proactive agent that runs on its own cloud machine, checks your connected apps every few hours, sends a morning brief, and asks before it sends, pays, or deletes (per launch coverage, sources in DUET.md). That is exactly the shape of `morning-plate`. Whether Duet can run a plugin skill inside a routine is not confirmed by anything published; the routine prompt is written so it works pasted as plain instructions either way. See [DUET.md](DUET.md) for the mapping, with every Duet fact labeled by source, and for the parts Duet can't do yet.
 
-**No Duet invite yet? Same.** So there's a [sandbox](sandbox/README.md) that fakes Duet's working conditions:
+**No Duet invite yet? Same.** So the scripted edition has a [sandbox](https://github.com/InspiredSpitfire/adhd-off-my-plate/tree/main/sandbox) that fakes Duet's working conditions:
 - nobody watching
 - no local files
 - no shell
@@ -95,7 +97,7 @@ It grades every run. Two Duet-profile runs on Opus (2026-10-28, four check-ins i
 
 The local scheduled-run profile, which can lint itself, passed clean.
 
-**Then we fixed the gap and ran it again.** RULES §3a now spells out the lint as a by-hand checklist for runtimes with no shell, with the date sweep first. It took three rounds of runs to get the wording right:
+**Then we fixed the gap and ran it again.** RULES §3a now spells out the lint as a by-hand checklist for runtimes with no shell, with the date sweep first. In this edition that checklist is the lint everywhere. It took three rounds of runs to get the wording right:
 
 | Wording | Check-ins | Lint passed | What still slipped |
 |---|---|---|---|
@@ -104,11 +106,13 @@ The local scheduled-run profile, which can lint itself, passed clean.
 | Final checklist | 4 | 4 | two briefs opened with a preamble instead of the state line |
 | Final, with the draft and first-line rules | 4 | 4 | nothing: every hard check passed, zero warnings |
 
-Four clean check-ins is evidence, not proof. Run `python3 sandbox/duet_sandbox.py` to add your own.
+Four clean check-ins is evidence, not proof. The sandbox is in the scripted edition if you want to add your own.
 
 ## Install
 
-Inside Claude Code:
+From the Claude plugin directory, once it is listed: search for ADHD: Off My Plate.
+
+The scripted edition, from GitHub, inside Claude Code:
 
 ```
 /plugin marketplace add InspiredSpitfire/adhd-off-my-plate
@@ -131,7 +135,7 @@ No inbox, no calendar, no commitment. Just watch it take a mess and hand back le
 1. `/setup` and say "skip" to all three questions.
 2. `/plate foggy`, then paste the fake brain dump from [examples/sample-brain-dump.md](examples/sample-brain-dump.md). It's a stranger's Tuesday: an unsent invoice, a dentist who won't stop texting, a course page stuck at 80% for two months, a dog who needs flea meds.
 3. You get one Plate back. Compare it to [examples/sample-plate.md](examples/sample-plate.md): two Keeps (Foggy gets two), one next step under ten minutes, the website rebuild in the graveyard with a revival date, the course page revived with one eight-minute text.
-4. `/due` runs `scripts/due.py` on your workspace: overdue nudges, graveyard items due back, deadlines. Empty on day one. That's the point.
+4. `/due` counts the dates in your workspace, step by step: overdue nudges, graveyard items due back, deadlines. Empty on day one. That's the point.
 
 When it lands, swap the fake dump for your real one and connect mail and calendar.
 
@@ -139,31 +143,7 @@ When it lands, swap the fake dump for your real one and connect mail and calenda
 
 `morning-plate` is built to run with nobody watching: no questions, assumptions labeled, AUTO and DRAFT work done, every NEEDS YOUR GO collected at the top of a phone-sized brief. Three ways to run it, most tested first.
 
-**1. On your own machine.** Tested 2026-10-27 with Claude Code 2.1.310; see "What the test showed" below.
-
-Copy [examples/morning.sh](examples/morning.sh) to `~/plate/morning.sh`. It finds the installed plugin, then runs, in effect:
-
-```bash
-claude -p "/adhd-off-my-plate:morning $HOME/plate" --permission-mode dontAsk --allowedTools "Read(/$HOME/plate/**)" "Read(/$PLUGIN/**)" "Edit(/$HOME/plate/**)" "Skill" "Agent" "Bash(python3 $PLUGIN/scripts/plate_lint.py:*)" "Bash(python3 $PLUGIN/scripts/due.py:*)" "Bash(python3 $PLUGIN/scripts/surfaced.py:*)" "mcp__claude_ai_Gmail__search_threads" "mcp__claude_ai_Gmail__get_thread" "mcp__claude_ai_Google_Calendar__list_calendars" "mcp__claude_ai_Google_Calendar__list_events" < /dev/null
-```
-
-The safety is in `dontAsk`: anything not on that list is denied, not asked about. No send, delete, RSVP, or pay tool is on it. Reads stay inside your workspace and the plugin; writes stay inside your workspace (`Edit(...)` covers writes; a `Write(...)` rule does nothing). The only commands it can run are the plugin's three read-and-report scripts, by exact path. A `python3 -c` one-liner, a quoted path, or a script call with a second command chained on is denied.
-
-Four things we learned the hard way running it headless, so you don't have to:
-- **Name the workspace in the prompt.** An unattended run has no shell to read environment variables, so without the path it goes looking for one.
-- **No `$VARIABLES` and no quotes in script commands.** `dontAsk` denies both. The rulebook tells the skills to write literal, unquoted paths.
-- **`< /dev/null`**, or `claude -p` waits for input that never comes.
-- **Your own hooks still run.** If you gate MCP tools with a PreToolUse hook, headless runs name your connectors `mcp__claude_ai_Gmail__*` and `mcp__claude_ai_Google_Calendar__*`, which can differ from the names the desktop app uses. Allow the read tools under those names too, or the brief says mail and calendar were unreachable.
-
-What the test showed: a full run of `morning.sh` against a fictional test workspace exited cleanly, wrote only inside that workspace, produced a lint-clean Plate and a phone-sized brief, and `surfaced.py` found no repeats on the new Plate. Each fence above was tested on its own. On the test machine its own MCP-gating hook blocked the connector reads, so the mail and calendar path is verified up to the permission layer, not against a live inbox.
-
-Then schedule the script. On a Mac, use launchd, because it runs a missed job when the laptop wakes up and cron just shrugs: edit and load [examples/com.offmyplate.morning.plist](examples/com.offmyplate.morning.plist) (instructions inside). On Linux, cron:
-
-```bash
-30 6 * * 1-5 /bin/sh "$HOME/plate/morning.sh"
-```
-
-The brief lands in `~/plate/notes/brief-YYYY-MM-DD.md`.
+**1. On your own machine.** Use the [scripted edition](https://github.com/InspiredSpitfire/adhd-off-my-plate#schedule-it): it ships `morning.sh` and a launchd example, tested 2026-10-27 with Claude Code 2.1.310. A scheduled run on your own Mac needs a script to start it, and this edition ships none.
 
 **2. A Claude Code routine in the cloud.** Not tested. A cloud routine cannot read `~/plate` on your machine, so the workspace has to live somewhere it can reach, the same constraint as Claude Duet.
 
@@ -172,21 +152,18 @@ The brief lands in `~/plate/notes/brief-YYYY-MM-DD.md`.
 ## Verify
 
 ```bash
-python3 scripts/check_plugin.py && claude plugin validate . --strict --profile directory
-python3 scripts/plate_lint.py examples/sample-plate.md        # PASS
-python3 scripts/plate_lint.py examples/sample-plate-bad.md    # FAIL, 13 planted defects
-python3 scripts/selftest.py                                   # due.py, surfaced.py, init_workspace.py: all checks PASS
-python3 sandbox/selftest_sandbox.py                           # Duet sandbox connectors + grader, free, all checks PASS
-python3 sandbox/duet_sandbox.py                               # the Duet sandbox itself: real Opus runs, uses your usage
+claude plugin validate . --strict --profile directory
 ```
+
+The scripted edition's lint and self-tests run against the same `examples/`: `sample-plate.md` passes, `sample-plate-bad.md` fails with 13 planted defects. Run RULES §3a on either by hand and you should get the same answers.
 
 ## Privacy
 
 What it reads: what you paste into a Claude Code session, the plugin's own files, your workspace (`~/plate` unless you name another folder, including its history, notes, and drafts), any other folder or repo you point it at, and, only if you have connected them in Claude yourself, your mail and calendar through your own connectors. It reads mail and calendar; it never sends, replies, RSVPs, trashes, or deletes. Reply and decline drafts go into your mail connector's drafts folder or your workspace, and you send them.
 
-What it stores: the Plate, its history, notes, drafts, and tables, as plain Markdown in your workspace on your own disk (or the connected-drive folder you name for Claude Duet). Setup adds the workspace path to the `.gitignore` of a git repo that contains the workspace. The optional scheduler example logs errors to `/tmp`, and the optional sandbox writes its runs to your temp folder. Nothing else.
+What it stores: the Plate, its history, notes, drafts, and tables, as plain Markdown in your workspace on your own disk (or the connected-drive folder you name for Claude Duet). Setup adds the workspace path to the `.gitignore` of a git repo that contains the workspace. Nothing else.
 
-What leaves your machine: only what Claude itself processes under your Claude account, and the drafts your connectors save in your own accounts. Nothing goes to the plugin's author. No telemetry, no analytics, no accounts. None of its scripts open a network connection; the optional morning script and sandbox start `claude` on your own login.
+What leaves your machine: only what Claude itself processes under your Claude account, and the drafts your connectors save in your own accounts. Nothing goes to the plugin's author. No telemetry, no analytics, no accounts. It ships no scripts, so nothing in it opens a network connection.
 
 ## What it will not do
 

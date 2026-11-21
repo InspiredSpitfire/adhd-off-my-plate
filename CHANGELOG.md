@@ -2,6 +2,13 @@
 
 All notable changes to this plugin. Dates are release dates.
 
+## [0.2.4] - 2026-11-21 (directory edition)
+
+### Changed
+- The directory edition, on the `directory` branch, is all Markdown. The Claude plugin directory refused 0.2.3 because it accepts scripts only from Verified organizations, so this edition ships none. Every check the scripts did is now a written procedure in RULES: §2c the due check (nudge-by, revive-by, deadlines, the 7-day re-due after a nudge), §2d the repeat check (the last 7 Plates, 3 shared content words), §2e setup (copy templates, never overwrite, keep it out of git), and §3a the lint, which was the no-shell checklist and is now the lint everywhere. The reviewer agent runs §3a again on its own and no longer needs a shell. The scripted edition stays on `main`, on GitHub.
+- Removed from this edition: `scripts/`, `sandbox/`, `examples/morning.sh`, the launchd example, the SVG icon source, the `.gitkeep` files, and the `AGENTS.md` symlink.
+- LICENSE holder is Inspired Spitfire.
+
 ## [0.2.3] - 2026-11-06
 
 ### Fixed
