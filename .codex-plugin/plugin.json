@@ -1,0 +1,40 @@
+{
+  "name": "adhd-off-my-plate",
+  "version": "0.3.0",
+  "description": "ADHD: Off My Plate. A chief of staff for one ADHD brain: brain dump, to-do list, inbox, calendar, and unfinished projects in; one Plate out. Plus straight talk: every reply opens with the thing to do and ends on one next step.",
+  "author": {
+    "name": "Inspired Spitfire",
+    "url": "https://github.com/InspiredSpitfire"
+  },
+  "homepage": "https://github.com/InspiredSpitfire/adhd-off-my-plate",
+  "repository": "https://github.com/InspiredSpitfire/adhd-off-my-plate",
+  "license": "MIT",
+  "keywords": [
+    "adhd",
+    "neurodivergent",
+    "chief-of-staff",
+    "prioritization",
+    "output-style",
+    "productivity",
+    "skills",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ADHD: Off My Plate",
+    "shortDescription": "A chief of staff for one ADHD brain",
+    "longDescription": "Hand it a messy brain dump, a to-do list that is too long, your inbox, and your calendar. It hands back one Plate: what it is taking off you, the 1 to 3 things that matter today, what to let go of, and a single next step. Straight talk shapes every other reply the same way: the thing to do first, steps numbered, one next step last.",
+    "developerName": "Inspired Spitfire",
+    "category": "Productivity",
+    "capabilities": [
+      "Instructions"
+    ],
+    "websiteURL": "https://github.com/InspiredSpitfire/adhd-off-my-plate",
+    "defaultPrompt": [
+      "Use straight-talk for the rest of this session.",
+      "Use plate-triage on this brain dump.",
+      "What am I missing this week?"
+    ],
+    "brandColor": "#FF0073"
+  }
+}

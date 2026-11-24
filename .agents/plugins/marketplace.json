@@ -1,0 +1,21 @@
+{
+  "name": "adhd-off-my-plate",
+  "interface": {
+    "displayName": "ADHD: Off My Plate"
+  },
+  "plugins": [
+    {
+      "name": "adhd-off-my-plate",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/InspiredSpitfire/adhd-off-my-plate.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

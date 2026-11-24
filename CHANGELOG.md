@@ -2,6 +2,18 @@
 
 All notable changes to this plugin. Dates are release dates.
 
+## [0.3.0] - 2026-11-16
+
+### Added
+- `straight-talk` skill and `/straight` command: a session-wide reply mode. Every reply opens with the thing to do, numbers the steps, says where we are, gives time in real units, shows what works now, holds side issues to one line, shows five items and keeps the rest, and ends on one next step of two minutes or less. It stays on until "stop straight talk" or "normal mode", and only turns on when asked for by name. Replies are sized to the brain state when one is known. Errors follow the evidence rule: a cause is stated only when the evidence shows it, otherwise it is "unknown" plus one check. It gives way to explanations, anything permanent, three "still broken" in a row, unclear requests, the app's own instructions, and a Plate (RULES §11).
+- Always-on: `/straight always` writes one empty flag file in the Claude config folder, and a SessionStart hook (`hooks/always_on.py`) prints the rules into each new session while it exists. `/straight never` removes it; `/straight status` reports it. The hook exits 0 on every failure. The notice is printed again after a resume, a `/clear`, or a compaction, and tells the model to leave straight talk off if the conversation shows it was turned off.
+- `scripts/straight_eval.py` with `evals/cases.jsonl` (20 cases) and `evals/rubric.md`: a blind with-vs-without eval and a three-rule release gate. `run` without `--go` only prints the call count. A run stops after 3 failed case-trials in a row or at `--max-cost`, a rerun retries only what was not scored, and a run on fewer than all cases is labeled PARTIAL. Not yet run for real, so the no-tools isolation it asks for is unconfirmed.
+- `scripts/selftest_straight.py`: 42 free checks for the hook, the toggle, the eval harness (against a fake `claude`), and the copies below.
+- Manifests for Codex, Cursor, Gemini CLI, Qwen Code, and Kimi, and `INSTALL.md`. None has been tested on its runtime. OpenCode, Pi, and OMP are not covered, and the always-on hook has no PowerShell or `sh` fallback: it needs `python3`.
+
+### Credit
+- Straight talk is adapted from [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) by Ayoub Ghriss (MIT). The persistent mode, the rule set and its exceptions, the opt-in session hook, the manifest layouts for other agents, and the shape of the eval (cases, rubric, release gate) all follow that project; about half the eval cases are its cases moved to everyday subjects. The wording is rewritten, the code is new, and three things are added: the evidence rule for errors, brain-state sizing, and giving way to a Plate. Its license notice is in `THIRD-PARTY.md`.
+
 ## [0.2.3] - 2026-11-06
 
 ### Fixed

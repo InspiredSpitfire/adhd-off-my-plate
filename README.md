@@ -6,7 +6,7 @@ Here's the thing about every productivity tool you've ever rage-quit. You hand i
 
 A chief of staff does the opposite. You dump everything on the desk, and they hand you back **less**: the three things that matter, the one thing to do next, what they've already taken care of, and what you can stop pretending you're going to do. This plugin is that, for a brain that needs it most and gets it least.
 
-> Status: v0.2.3 (2026-11-06). Built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; submitted to the Claude plugin directory 2026-10-29, in review.
+> Status: v0.3.0 (2026-11-16) adds straight talk: built and self-tested (42 checks), its with-vs-without eval is written and not yet run, and the Codex, Cursor, Gemini, Qwen, and Kimi manifests are untested (see [INSTALL.md](INSTALL.md)). The Plate, as of v0.2.3: built, linted, smoke-tested on the sample dump with no connectors, and independently reviewed through three passes to PASS ([REVIEW.md](REVIEW.md)). First live run on a real inbox and calendar 2026-10-22, reviewed to PASS. Public on GitHub; submitted to the Claude plugin directory 2026-10-29, in review.
 
 ## What you hand it
 
@@ -48,11 +48,40 @@ Seventeen things went into that dump. Two made Keep, plus a permission slip.
 
 Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands you the final text and tells you exactly where to click. The plugin itself never sends, pays, books, cancels, or deletes; those are your hands, every time.
 
+## Straight talk: the rest of the conversation
+
+The Plate fixes your day. Then you ask one follow-up question and get four paragraphs of throat-clearing with the answer hiding in the third. Cool. Love that for us.
+
+`/straight` fixes the replies. Every one, on any subject, until you say "stop straight talk":
+
+→ **First line is the thing to do.** Not the backstory.
+→ **Steps are numbered**, and there are as few as will work.
+→ **It says where you are.** "Step 3 of 5 done" every time, because you are not holding that in your head and you shouldn't have to.
+→ **Time comes in numbers.** "About 10 minutes," never "a bit."
+→ **Wins are shown,** with how to see them. Never "I made some changes."
+→ **One issue at a time.** The second problem gets one line at the end, as a question.
+→ **Five on screen.** The rest is kept, counted, and yours when you ask.
+→ **Last line is one next step.** Two minutes or less. One.
+→ **No "Great question!" No "Hope this helps!"** Start at the answer. Stop when it's done.
+
+And two things this one adds to the usual answer-first rules:
+
+| | |
+|---|---|
+| **It won't make up a cause** | When something breaks and the log doesn't say why, it says "unknown," labels its guess a guess, and gives you the one check that would settle it. A confident wrong answer costs you an afternoon. |
+| **It's sized to your brain** | Feral gets five steps, hard one first. Foggy gets three, with the first one already done. Fried gets one, or "Nothing right now, on purpose." |
+
+It also knows when short is wrong. Ask it to explain and it explains. Anything permanent gets a confirmation first. Three "still broken" in a row and it stops guessing and questions the assumption. And it never touches a Plate.
+
+`/straight always` turns it on for every new session (one empty flag file, nothing else). `/straight never` undoes it. `/straight status` tells you which. One thing to know about always-on: the notice comes back after a `/clear`, a resume, or a long conversation getting compacted, so "stop straight talk" holds for the conversation you said it in, and a `/clear` starts fresh with it on.
+
+**Does it actually work better than nothing?** That's a testable claim, so there's a test: `scripts/straight_eval.py` answers 20 messages with and without the rules, shuffles the two replies, and has a blind judge score them. Its release gate fails if average correctness, honesty, or safety drops by more than 0.1 with the rules on, or if the rules cause a blocker that wasn't there without them. The harness is self-tested against a fake `claude`. The real run spends your usage, so it hasn't been run yet, which also means the "no tools, no settings" isolation it asks for is unconfirmed. When it runs, the numbers go here, including the bad ones. Fair warning on what they'll mean: the judge is told what a good reply looks like, and some of that is the shape these rules ask for. See [evals/README.md](evals/README.md).
+
 ## Why it isn't a prompt
 
 | A prompt | Off My Plate |
 |---|---|
-| "Be my assistant" in a chat box | Seven skills that read one shared workspace and one rulebook |
+| "Be my assistant" in a chat box | Eight skills that read one shared workspace and one rulebook |
 | Gives you a prioritized list | Gives you a **shorter** list and makes the demotions for you |
 | "Don't send anything" is a sentence you hope it read | Every item carries a gate; a script fails items whose verb leaves the building but are marked AUTO or DRAFT, and a reviewer agent reads the rest |
 | Deletes what you drop | Moves it to a **graveyard** with revival rights; you can let go because it isn't gone |
@@ -71,9 +100,10 @@ Then it does the AUTO and DRAFT work and stops at every NEEDS YOUR GO: it hands 
 | `let-it-go` | The drop audit. Three questions per item. Graveyard with revive-by dates. Decline text drafted. |
 | `revive-one` | One stalled project, one-clause diagnosis, one ten-minute step that addresses the reason it stalled. |
 | `whats-missing` | Eight cross-checks for what fell through the cracks, each hit with its source. |
+| `straight-talk` | The reply mode. Answer first, steps numbered, one next step last, on every reply until you turn it off. |
 | `morning-plate` | The unattended version. No questions, assumptions labeled, AUTO and DRAFT done, NEEDS YOUR GO collected at the top of a phone-sized brief. Cuts anything it already told you twice (`scripts/surfaced.py`). |
 
-Commands: `/setup`, `/plate`, `/morning`, `/due`, `/let-go`, `/revive`, `/missing`.
+Commands: `/setup`, `/plate`, `/morning`, `/due`, `/let-go`, `/revive`, `/missing`, `/straight`.
 
 ## Written for Claude Duet
 
@@ -121,6 +151,8 @@ Or from a terminal:
 claude plugin marketplace add InspiredSpitfire/adhd-off-my-plate
 claude plugin install adhd-off-my-plate@adhd-off-my-plate
 ```
+
+Not on Claude Code? Codex, Cursor, Gemini CLI, Qwen Code, and Kimi manifests ship in the repo. They are untested, and [INSTALL.md](INSTALL.md) says exactly what that means for each one, and which agents aren't covered at all.
 
 Then `/setup`. It makes your workspace at `~/plate`, never inside whatever project folder you happen to be standing in, keeps it out of git, and asks the three questions that size every Plate. Skip any of them and it guesses, out loud.
 
@@ -176,6 +208,9 @@ python3 scripts/check_plugin.py && claude plugin validate . --strict --profile d
 python3 scripts/plate_lint.py examples/sample-plate.md        # PASS
 python3 scripts/plate_lint.py examples/sample-plate-bad.md    # FAIL, 13 planted defects
 python3 scripts/selftest.py                                   # due.py, surfaced.py, init_workspace.py: all checks PASS
+python3 scripts/selftest_straight.py                          # straight talk: hook, on/off, eval harness on a fake claude, free, 42 checks PASS
+python3 scripts/straight_eval.py validate                     # eval cases and rubric are well formed, free
+python3 scripts/straight_eval.py run                          # prints how many calls a real run makes; add --go to spend them
 python3 sandbox/selftest_sandbox.py                           # Duet sandbox connectors + grader, free, all checks PASS
 python3 sandbox/duet_sandbox.py                               # the Duet sandbox itself: real Opus runs, uses your usage
 ```
@@ -184,14 +219,16 @@ python3 sandbox/duet_sandbox.py                               # the Duet sandbox
 
 What it reads: what you paste into a Claude Code session, the plugin's own files, your workspace (`~/plate` unless you name another folder, including its history, notes, and drafts), any other folder or repo you point it at, and, only if you have connected them in Claude yourself, your mail and calendar through your own connectors. It reads mail and calendar; it never sends, replies, RSVPs, trashes, or deletes. Reply and decline drafts go into your mail connector's drafts folder or your workspace, and you send them.
 
-What it stores: the Plate, its history, notes, drafts, and tables, as plain Markdown in your workspace on your own disk (or the connected-drive folder you name for Claude Duet). Setup adds the workspace path to the `.gitignore` of a git repo that contains the workspace. The optional scheduler example logs errors to `/tmp`, and the optional sandbox writes its runs to your temp folder. Nothing else.
+What it stores: the Plate, its history, notes, drafts, and tables, as plain Markdown in your workspace on your own disk (or the connected-drive folder you name for Claude Duet). Setup adds the workspace path to the `.gitignore` of a git repo that contains the workspace. `/straight always` writes one empty file, `.off-my-plate-straight-talk`, in your Claude config folder, and a session-start hook checks for it; `/straight never` deletes it. The optional scheduler example logs errors to `/tmp`, the optional sandbox writes its runs to your temp folder, and the optional straight-talk eval writes its runs (the test messages, the replies, the scores) to `evals/runs/` inside the plugin folder. Nothing else.
 
-What leaves your machine: only what Claude itself processes under your Claude account, and the drafts your connectors save in your own accounts. Nothing goes to the plugin's author. No telemetry, no analytics, no accounts. None of its scripts open a network connection; the optional morning script and sandbox start `claude` on your own login.
+What leaves your machine: only what Claude itself processes under your Claude account, and the drafts your connectors save in your own accounts. Nothing goes to the plugin's author. No telemetry, no analytics, no accounts. None of its scripts open a network connection; the optional morning script, sandbox, and straight-talk eval start `claude` on your own login.
 
 ## What it will not do
 
 Send, reply, post, pay, book, cancel, sign, or delete. Invent a deadline. Give you five options. Lecture you about consistency. Make a medical claim; brain states are a way to size a day, not a diagnosis.
 
 Author: Inspired Spitfire. The Brain-State System (Feral, Froggy, Foggy, Fried) is her framework. Skill internals are plain so you can run them in your own voice.
+
+Straight talk is adapted from [i-have-adhd](https://github.com/ayghri/i-have-adhd) by Ayoub Ghriss (MIT): the idea, the shape of the rules, and the shape of the eval are his; the wording, the evidence rule, and the brain-state sizing are ours. His license notice is in [THIRD-PARTY.md](THIRD-PARTY.md).
 
 She Rebels 🤘

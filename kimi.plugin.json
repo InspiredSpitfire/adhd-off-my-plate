@@ -1,0 +1,12 @@
+{
+  "name": "adhd-off-my-plate",
+  "version": "0.3.0",
+  "description": "ADHD: Off My Plate. A chief of staff for one ADHD brain, plus straight talk: every reply opens with the thing to do and ends on one next step.",
+  "license": "MIT",
+  "homepage": "https://github.com/InspiredSpitfire/adhd-off-my-plate",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ADHD: Off My Plate",
+    "shortDescription": "A chief of staff for one ADHD brain"
+  }
+}

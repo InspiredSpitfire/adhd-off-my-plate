@@ -1,0 +1,7 @@
+interface:
+  display_name: "Straight Talk"
+  short_description: "Answer first, one next step last, for ADHD readers"
+  default_prompt: "Use $straight-talk for the rest of this session."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+{
+  "name": "adhd-off-my-plate",
+  "version": "0.3.0",
+  "description": "ADHD: Off My Plate for Gemini CLI. Straight talk on every reply: the thing to do first, steps numbered, one next step last. The Plate rulebook is included for reference.",
+  "contextFileName": "GEMINI.md"
+}
